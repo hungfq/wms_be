@@ -1,0 +1,65 @@
+{
+  "name": "laravel/lumen",
+  "description": "The Laravel Lumen Framework.",
+  "keywords": [
+    "framework",
+    "laravel",
+    "lumen"
+  ],
+  "license": "MIT",
+  "type": "project",
+  "require": {
+    "php": ">=7.4",
+    "ext-json": "*",
+    "api-ecosystem-for-laravel/dingo-api": "^3.0.0",
+    "doctrine/dbal": "^3.6",
+    "elephantio/elephant.io": "^4.2",
+    "guzzlehttp/guzzle": "^7.5",
+    "laravel/lumen-framework": "^8.3.1",
+    "league/flysystem": "~1.0",
+    "league/flysystem-aws-s3-v3": "~1.0",
+    "maatwebsite/excel": "^3.1",
+    "nesbot/carbon": "^2.67",
+    "sentry/sentry-laravel": "2.x-dev",
+    "spatie/data-transfer-object": "^2.8",
+    "spatie/laravel-permission": "^5.5",
+    "tymon/jwt-auth": "dev-develop",
+    "illuminate/redis": "^8.83",
+    "illuminate/mail": "^8.83",
+    "predis/predis": "^1.1"
+  },
+  "require-dev": {
+    "fzaninotto/faker": "^1.9.1",
+    "mockery/mockery": "^1.3.1",
+    "phpunit/phpunit": "^8.5"
+  },
+  "autoload": {
+    "classmap": [
+      "database/seeds",
+      "database/factories"
+    ],
+    "psr-4": {
+      "App\\": "app/"
+    }
+  },
+  "autoload-dev": {
+    "classmap": [
+      "tests/"
+    ]
+  },
+  "config": {
+    "preferred-install": "dist",
+    "sort-packages": true,
+    "optimize-autoloader": true,
+    "allow-plugins": {
+      "php-http/discovery": true
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "scripts": {
+    "post-root-package-install": [
+      "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+    ]
+  }
+}
