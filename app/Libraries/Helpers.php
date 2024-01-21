@@ -2,6 +2,7 @@
 
 namespace App\Libraries;
 
+use Carbon\Carbon;
 use Illuminate\Support\Str;
 
 class Helpers
@@ -44,5 +45,71 @@ class Helpers
                 $query->orderBy($key, $value);
             }
         }
+    }
+
+    public static function formatNumber($number)
+    {
+        return number_format($number, 0, '.', ',');
+    }
+
+    public static function formatNumberTotalM3($number)
+    {
+        if (!$number || in_array($number, ['0.000', '0.0000'])) {
+            return 0;
+        }
+
+        $number = number_format($number, 3, '.', ',');
+
+        return self::formatNumberTypeFloat($number);
+    }
+
+    public static function formatNumberTypeFloat($val)
+    {
+        if (strpos($val, ',')) {
+
+            $values = explode(',', $val);
+
+            $endValue = $values[count($values) - 1];
+
+            unset($values[count($values) - 1]);
+
+            $intNumber = implode(',', $values) . ',';
+
+            preg_match("#^([0-9]*)(\.([0-9]*?))(0*)$#", trim($endValue), $o);
+            return ($intNumber ? $intNumber : '') . $o[1] . ($o[2] != '.' ? $o[2] : '');
+        } else {
+            preg_match("#^([+\-]|)([0-9]*)(\.([0-9]*?))(0*)$#", trim($val), $o);
+            return $o[1] . sprintf('%d', $o[2]) . ($o[3] != '.' ? $o[3] : '');
+        }
+    }
+
+    public static function formatToDate($value)
+    {
+        if (empty($value)) {
+            return $value;
+        }
+
+        $date = Carbon::createFromFormat('Y-m-d H:i:s', new Carbon($value), 'UTC');
+        return $date->setTimeZone(Data::getConfigTimeZone())->format(Data::getConfigDate());
+    }
+
+    public static function formatToDateTime($value)
+    {
+        if (empty($value)) {
+            return $value;
+        }
+
+        $dateTime = Carbon::createFromFormat('Y-m-d H:i:s', new Carbon($value), 'UTC');
+        return $dateTime->setTimeZone(Data::getConfigTimeZone())->format(Data::getConfigDateTime());
+    }
+
+    public static function formatToDateTimeUTC($value)
+    {
+        if (empty($value)) {
+            return $value;
+        }
+
+        $dateTime = Carbon::createFromFormat('Y-m-d H:i:s', new Carbon($value), 'UTC');
+        return $dateTime->format(Data::getConfigDateTime());
     }
 }
