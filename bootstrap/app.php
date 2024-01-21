@@ -61,7 +61,7 @@ $app->singleton(
 */
 
 //$configFiles = ['app', 'auth', 'jwt', 'permission', 'constant', 'swagger-lume', 'queue'];
-$configFiles = ['app', 'auth', 'cors', 'permission', 'mail', 'services'];
+$configFiles = ['app', 'auth', 'cors', 'permission', 'mail', 'services', 'jwt'];
 foreach ($configFiles as $file) {
     $app->configure($file);
 }
