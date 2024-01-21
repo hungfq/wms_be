@@ -56,11 +56,20 @@ $api->group([
         $api->get('/po-types', [
             'uses' => 'DropdownController@poTypes',
         ]);
+        $api->get('/bin-locations', [
+            'uses' => 'DropdownController@binLocs',
+        ]);
         $api->get('/customers', [
             'uses' => 'DropdownController@customers',
         ]);
         $api->get('/user-by-whs', [
             'uses' => 'DropdownController@userByWhs',
+        ]);
+    });
+
+    $api->group(['prefix' => '/autocomplete'], function ($api) {
+        $api->get('/items', [
+            'uses' => 'AutocompleteController@items',
         ]);
     });
 

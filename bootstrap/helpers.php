@@ -65,3 +65,13 @@ if (!function_exists('asset')) {
         return app('url')->asset($path, $secure);
     }
 }
+
+if (!function_exists('common_wms_assets')) {
+    function common_wms_assets($path, $secure = null)
+    {
+        return dirname(__DIR__) .
+            DIRECTORY_SEPARATOR . 'resources' .
+            DIRECTORY_SEPARATOR . 'assets' .
+            DIRECTORY_SEPARATOR . $path;
+    }
+}

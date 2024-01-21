@@ -148,7 +148,7 @@ class Export
         $title = static::formatTitle($title);
         $data = static::formatData($data, $title);
 
-        $view = $view ? $view : 'commonView::ExcelTemplate';
+        $view = $view ?: 'ExcelTemplate';
 
         ob_end_clean();
         return Excel::download(new ExportCustom([

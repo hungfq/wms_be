@@ -57,6 +57,7 @@ $api->version('v1', function ($api) {
             'Notification',
             'Documents',
             'MasterData',
+            'Inbound',
         ];
 
         foreach ($modules as $module) {

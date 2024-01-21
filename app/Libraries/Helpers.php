@@ -112,4 +112,13 @@ class Helpers
         $dateTime = Carbon::createFromFormat('Y-m-d H:i:s', new Carbon($value), 'UTC');
         return $dateTime->format(Data::getConfigDateTime());
     }
+
+    public static function getTxtYesOrNoOfSerial($isSerial, $withTranslate = false)
+    {
+        $string = $isSerial ? 'Yes' : 'No';
+        if ($withTranslate) {
+            $string = Language::translate($string);
+        }
+        return $string;
+    }
 }

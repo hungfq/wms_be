@@ -2,12 +2,14 @@
 
 namespace App\Modules\MasterData\Controllers;
 
+use App\Entities\BinLocation;
 use App\Entities\ContainerType;
 use App\Entities\Customer;
 use App\Entities\PoType;
 use App\Entities\User;
 use App\Http\Controllers\ApiController;
 use App\Libraries\Data;
+use App\Modules\MasterData\Transformers\Dropdown\BinLocTransformer;
 use App\Modules\MasterData\Transformers\Dropdown\ContainerTypeTransformer;
 use App\Modules\MasterData\Transformers\Dropdown\CustomerTransformer;
 use App\Modules\MasterData\Transformers\Dropdown\PoTypeTransformer;
@@ -25,6 +27,13 @@ class DropdownController extends ApiController
     public function poTypes(PoTypeTransformer $transformer)
     {
         $data = PoType::get();
+
+        return $this->response->collection($data, $transformer);
+    }
+
+    public function binLocs(BinLocTransformer $transformer)
+    {
+        $data = BinLocation::query()->where('whs_id', Data::getCurWhs())->get();
 
         return $this->response->collection($data, $transformer);
     }
