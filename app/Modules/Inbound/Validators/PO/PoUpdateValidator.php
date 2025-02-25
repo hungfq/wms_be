@@ -40,7 +40,6 @@ class PoUpdateValidator extends AbstractValidator
             'from_vendor_id' => 'nullable|integer',
             'final_des' => 'nullable|string|max:150',
             'arrival' => 'nullable|string|max:50',
-            'is_mix_model' => 'required|integer',
             'details' => 'nullable|array',
             'details.*.item_id' => 'required|integer',
             'details.*.bin_loc_id' => 'required|integer',

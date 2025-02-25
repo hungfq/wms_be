@@ -58,6 +58,11 @@ $api->version('v1', function ($api) {
             'Documents',
             'MasterData',
             'Inbound',
+            'Api',
+            'EventTracking',
+            'Barcode',
+            'Inventory',
+            'Outbound',
         ];
 
         foreach ($modules as $module) {

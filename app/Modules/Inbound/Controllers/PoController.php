@@ -18,8 +18,12 @@ use Illuminate\Support\Facades\DB;
 
 class PoController extends ApiController
 {
-    public function index(PoViewAction $action, PoViewTransformer $transformer)
+    public function index($whsId, PoViewAction $action, PoViewTransformer $transformer)
     {
+        $this->request->merge([
+            'whs_id' => $whsId,
+        ]);
+
         $result = $action->handle(
             PoViewDTO::fromRequest()
         );
@@ -31,8 +35,12 @@ class PoController extends ApiController
         return $this->response->paginator($result, $transformer);
     }
 
-    public function store(PoStoreValidator $validator, PoStoreAction $action)
+    public function store($whsId, PoStoreValidator $validator, PoStoreAction $action)
     {
+        $this->request->merge([
+            'whs_id' => $whsId,
+        ]);
+
         $validator->validate($this->request->all());
 
         DB::transaction(function () use ($action, $validator) {
@@ -42,8 +50,12 @@ class PoController extends ApiController
         return $this->responseSuccess(Language::translate('Create PO Successfully.'));
     }
 
-    public function show($poHdrId, PoShowTransformer $transformer)
+    public function show($whsId, $poHdrId, PoShowTransformer $transformer)
     {
+        $this->request->merge([
+            'whs_id' => $whsId,
+        ]);
+
         $poHdr = PoHdr::query()
             ->with([
 
@@ -57,9 +69,10 @@ class PoController extends ApiController
         return $this->response->item($poHdr, $transformer);
     }
 
-    public function update($poHdrId, PoUpdateValidator $validator, PoUpdateAction $action)
+    public function update($whsId, $poHdrId, PoUpdateValidator $validator, PoUpdateAction $action)
     {
         $this->request->merge([
+            'whs_id' => $whsId,
             'po_hdr_id' => $poHdrId,
         ]);
 

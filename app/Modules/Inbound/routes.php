@@ -5,7 +5,7 @@ $api->group([
     'namespace' => '\App\Modules\Inbound\Controllers'
 ], function ($api) {
 
-    $api->group(['prefix' => '/po'], function ($api) {
+    $api->group(['prefix' => '/whs/{whsId}/po'], function ($api) {
         $api->get('/', [
             'uses' => 'PoController@index',
         ]);
@@ -27,9 +27,33 @@ $api->group([
         });
     });
 
+    $api->group(['prefix' => '/whs/{whsId}/goods-receipt'], function ($api) {
+        $api->get('/', [
+            'uses' => 'GrController@index',
+        ]);
+
+        $api->group(['prefix' => '/{grHdrId}'], function ($api) {
+            $api->get('/', [
+                'uses' => 'GrController@show',
+            ]);
+
+            $api->put('/complete', [
+                'uses' => 'GrController@complete',
+            ]);
+
+            $api->get('/gr-logs', [
+                'uses' => 'GrController@viewGrLogs',
+            ]);
+        });
+    });
+
     $api->group(['prefix' => '/autocomplete'], function ($api) {
         $api->get('/po-num', [
             'uses' => 'AutocompleteController@poNum',
+        ]);
+
+        $api->get('/vendors', [
+            'uses' => 'AutocompleteController@vendor',
         ]);
     });
 

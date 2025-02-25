@@ -43,6 +43,11 @@ class Inventory extends BaseSoftModel
             ->get();
     }
 
+    public function item()
+    {
+        return $this->belongsTo(Item::class, 'item_id');
+    }
+
     public function binLocation()
     {
         return $this->belongsTo(BinLocation::class, 'bin_loc_id');

@@ -49,7 +49,6 @@ class PoStoreValidator extends AbstractValidator
             'from_vendor_id' => 'nullable|integer',
             'final_des' => 'nullable|string|max:150',
             'arrival' => 'nullable|string|max:50',
-            'is_mix_model' => 'required|integer',
             'details' => 'required|array',
             'details.*.item_id' => 'required',
             'details.*.bin_loc_id' => 'required',

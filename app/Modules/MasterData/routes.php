@@ -27,6 +27,9 @@ $api->group([
         $api->get('/', [
             'uses' => 'MenuController@index'
         ]);
+        $api->put('/', [
+            'uses' => 'MenuController@update'
+        ]);
     });
 
     $api->group(['prefix' => '/table-config'], function ($api) {
@@ -65,17 +68,50 @@ $api->group([
         $api->get('/user-by-whs', [
             'uses' => 'DropdownController@userByWhs',
         ]);
+        $api->get('/country', [
+            'uses' => 'DropdownController@country',
+        ]);
+        $api->get('/state', [
+            'uses' => 'DropdownController@state',
+        ]);
+        $api->get('/order-types', [
+            'uses' => 'DropdownController@orderTypes',
+        ]);
+        $api->get('/departments', [
+            'uses' => 'DropdownController@department',
+        ]);
     });
 
     $api->group(['prefix' => '/autocomplete'], function ($api) {
         $api->get('/items', [
             'uses' => 'AutocompleteController@items',
         ]);
+        $api->get('/locations', [
+            'uses' => 'AutocompleteController@location',
+        ]);
+        $api->get('/third-parties', [
+            'uses' => 'AutocompleteController@thirdParty',
+        ]);
     });
 
     $api->group(['prefix' => '/status'], function ($api) {
         $api->get('/{sts_type}', [
             'uses' => 'StatusController@getAll',
+        ]);
+    });
+
+    $api->group(['prefix' => '/third-party'], function ($api) {
+        $api->get('/', [
+            'uses' => 'ThirdPartyController@view',
+        ]);
+        $api->post('/', [
+            'uses' => 'ThirdPartyController@store',
+        ]);
+        $api->get('/{tpId}', [
+            'uses' => 'ThirdPartyController@show',
+        ]);
+        $api->put('/{tpId}', [
+            'uses' => 'ThirdPartyController@update',
         ]);
     });
 

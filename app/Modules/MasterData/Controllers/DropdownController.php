@@ -4,8 +4,12 @@ namespace App\Modules\MasterData\Controllers;
 
 use App\Entities\BinLocation;
 use App\Entities\ContainerType;
+use App\Entities\Country;
 use App\Entities\Customer;
+use App\Entities\Department;
+use App\Entities\OdrType;
 use App\Entities\PoType;
+use App\Entities\State;
 use App\Entities\User;
 use App\Http\Controllers\ApiController;
 use App\Libraries\Data;
@@ -57,5 +61,39 @@ class DropdownController extends ApiController
             ->get();
 
         return $this->response->collection($data, $transformer);
+    }
+
+    public function country(BinLocTransformer $transformer)
+    {
+        $data = Country::query()
+            ->where('status', Country::STATUS_ACTIVE)
+            ->get();
+
+        return $this->response->collection($data, $transformer);
+    }
+
+    public function state(BinLocTransformer $transformer)
+    {
+        $query = State::query();
+
+        if ($this->request->input('country_id')) {
+            $query->where('country_id', $this->request->input('country_id'));
+        }
+
+        return $this->response->collection($query->get(), $transformer);
+    }
+
+    public function orderTypes(BinLocTransformer $transformer)
+    {
+        $query = OdrType::query();
+
+        return $this->response->collection($query->get(), $transformer);
+    }
+
+    public function department(BinLocTransformer $transformer)
+    {
+        $query = Department::query();
+
+        return $this->response->collection($query->get(), $transformer);
     }
 }

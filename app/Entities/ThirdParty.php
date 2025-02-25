@@ -31,9 +31,4 @@ class ThirdParty extends BaseSoftModel
     {
         return $this->belongsTo(User::class, 'updated_by');
     }
-
-    public function groups()
-    {
-        return $this->morphToMany(Groups::class, 'groupables');
-    }
 }

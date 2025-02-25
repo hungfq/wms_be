@@ -23,7 +23,7 @@ class AutocompleteItemAction
             $query->where('sku', 'LIKE', "%{$search}%");
         }
 
-        $query->orderBy('created_at', 'DESC');
+        $query->orderBy('item_id', 'DESC');
 
         $limit = $dto->limit ?? ITEM_PER_PAGE;
         $page = $dto->page ?? self::DEFAULT_PAGE;

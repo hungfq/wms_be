@@ -49,6 +49,15 @@ class PoViewAction
             ->leftJoin('users as uc', 'uc.id', '=', 'po_hdr.created_by')
             ->leftJoin('users as uu', 'uu.id', '=', 'po_hdr.updated_by');
 
+        if ($this->dto->whs_id) {
+            $query->where('po_hdr.whs_id', $this->dto->whs_id);
+        }
+
+        if ($this->dto->po_sts) {
+            $poSts = explode(',', $this->dto->po_sts);
+            $query->whereIn('po_hdr.po_sts', $poSts);
+        }
+
         Helpers::sortBuilder($query, $dto->toArray(), [
             'created_by_name' => 'uc.name',
             'updated_by_name' => 'uu.name',
