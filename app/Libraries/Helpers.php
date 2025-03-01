@@ -121,4 +121,16 @@ class Helpers
         }
         return $string;
     }
+
+    public static function calculateCartonQty($qty, $pack_size)
+    {
+        $ctnTtl = floor($qty / $pack_size);
+        $pieceRemain = $qty - ($ctnTtl * $pack_size);
+
+        return [
+            'piece_init' => $pack_size,
+            'ctn_ttl' => $ctnTtl,
+            'piece_remain' => $pieceRemain,
+        ];
+    }
 }

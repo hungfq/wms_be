@@ -55,13 +55,6 @@ class OrderCreateAction
             }
         }
 
-        if ($this->dto->container_type_id) {
-            $containerType = ContainerType::query()->find($this->dto->container_type_id);
-            if (!$containerType) {
-                throw new UserException(Language::translate('Container type not found'));
-            }
-        }
-
         if ($this->dto->odr_type == OrderHdr::TYPE_NISSIN_BACK_ORDER) {
             throw new UserException(Language::translate(
                 "Can't create order with order type {0}. Please contact admin for support!",

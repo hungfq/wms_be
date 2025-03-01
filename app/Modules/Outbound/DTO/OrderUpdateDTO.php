@@ -44,6 +44,7 @@ class OrderUpdateDTO extends FlexibleDataTransferObject
     public $bl_no;
     public $job_no;
     public $invoice_no;
+    public $amount;
 
     public static function fromRequest($request = null)
     {
@@ -86,6 +87,7 @@ class OrderUpdateDTO extends FlexibleDataTransferObject
             'bl_no' => $request->input('bl_no'),
             'job_no' => $request->input('job_no'),
             'invoice_no' => $request->input('invoice_no'),
+            'amount' => $request->input('total_line_amount'),
 
             'odr_type' => $request->input('odr_type') ?? OrderHdr::TYPE_BULK,
         ]);

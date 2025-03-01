@@ -97,11 +97,10 @@ class OrderOutSortAction
                     'odr_carton_id' => $orderCarton->id,
                     'item_id' => $this->odrDtl->item_id,
                     'qty' => $inputQty,
-                    'confirm_serial' => null,
                     'confirm_by' => Auth::id(),
                 ];
 
-                if ($odrCartonIds) {
+                if (count($odrCartonIds)) {
                     $odrCartonIds[] += $orderCarton->id;
                     $param['odr_carton_ids'] = json_encode($odrCartonIds);
                     $param['qty'] = $this->odrDtl->picked_qty;
@@ -130,7 +129,6 @@ class OrderOutSortAction
                     'odr_carton_id' => $orderCarton->id,
                     'item_id' => $this->odrDtl->item_id,
                     'qty' => $inputQty,
-                    'confirm_serial' => null,
                     'confirm_by' => Auth::id(),
                 ];
 
@@ -190,9 +188,6 @@ class OrderOutSortAction
 
         if (!$odrNotSorted) {
             $this->odrHdr->odr_sts = OrderHdr::STS_OUT_SORTED;
-            $this->odrHdr->os_start_at = date('Y-m-d H:i:s');
-            $this->odrHdr->os_end_at = date('Y-m-d H:i:s');
-            $this->odrHdr->schedule_at = date('Y-m-d H:i:s');
 
 //            $this->events[] = [
 //                'cus_id' => $this->odrHdr->cus_id,

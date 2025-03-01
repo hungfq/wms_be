@@ -6,14 +6,22 @@ use App\Http\Controllers\ApiController;
 use App\Libraries\Language;
 use App\Modules\Outbound\Actions\OrderAllocateAction;
 use App\Modules\Outbound\Actions\OrderCreateAction;
+use App\Modules\Outbound\Actions\OrderOutSortAction;
+use App\Modules\Outbound\Actions\OrderScheduleToShipAction;
+use App\Modules\Outbound\Actions\OrderShipAction;
 use App\Modules\Outbound\Actions\OrderShowAction;
 use App\Modules\Outbound\Actions\OrderUpdateAction;
+use App\Modules\Outbound\Actions\OrderUpdateRemarkAction;
 use App\Modules\Outbound\Actions\OrderViewAction;
+use App\Modules\Outbound\DTO\OrderUpdateRemarkDTO;
 use App\Modules\Outbound\DTO\OrderViewDTO;
 use App\Modules\Outbound\Transformers\OrderShowTransformer;
 use App\Modules\Outbound\Transformers\OrderViewTransformer;
 use App\Modules\Outbound\Validators\OrderAllocateValidator;
 use App\Modules\Outbound\Validators\OrderCreateValidator;
+use App\Modules\Outbound\Validators\OrderOutSortValidator;
+use App\Modules\Outbound\Validators\OrderScheduleToShipValidator;
+use App\Modules\Outbound\Validators\OrderShipValidator;
 use App\Modules\Outbound\Validators\OrderUpdateValidator;
 use Illuminate\Support\Facades\DB;
 
@@ -96,5 +104,65 @@ class OrderController extends ApiController
         );
 
         return $this->responseSuccess(Language::translate('All order(s) allocated success'));
+    }
+
+    public function outSortMultiple($whsId, OrderOutSortAction $action, OrderOutSortValidator $validator)
+    {
+        $this->request->merge([
+            'whs_id' => $whsId,
+        ]);
+
+        $validator->validate($this->request->all());
+
+        $action->handle(
+            $validator->toDTO()
+        );
+
+        return $this->responseSuccess(Language::translate('Confirm Out Sort Successfully!'));
+    }
+
+    public function updateRemark($odrHdrId, OrderUpdateRemarkAction $action)
+    {
+        $this->request->merge([
+            'odr_hdr_id' => $odrHdrId
+        ]);
+
+        $action->handle(
+            OrderUpdateRemarkDTO::fromRequest()
+        );
+
+        return $this->responseSuccess(Language::translate('Update Remark Order Successfully.'));
+    }
+
+    public function scheduleToShip($whsId, OrderScheduleToShipValidator $validator, OrderScheduleToShipAction $action)
+    {
+        $this->request->merge([
+            'whs_id' => $whsId,
+        ]);
+
+        $validator->validate($this->request->all());
+
+        DB::transaction(function () use ($validator, $action) {
+            $action->handle(
+                $validator->toDTO()
+            );
+        });
+
+        return $this->responseSuccess(Language::translate('Schedule To Ship Order Successfully.'));
+    }
+
+    public function ship($whsId, OrderShipValidator $validator, OrderShipAction $action)
+    {
+        $this->request->merge([
+            'whs_id' => $whsId,
+        ]);
+
+        $validator->validate($this->request->all());
+
+        $action->handle(
+            $validator->toDTO()
+        );
+
+        return $this->responseSuccess(Language::translate('Ship Order(s) Successfully.'));
     }
 }

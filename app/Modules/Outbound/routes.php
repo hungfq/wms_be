@@ -18,6 +18,19 @@ $api->group([
             'uses' => 'OrderController@allocateMultiple',
         ]);
 
+        $api->post('/out-sort', [
+            'uses' => 'OrderController@outSortMultiple',
+        ]);
+
+        $api->post('/schedule-to-ship', [
+            'uses' => 'OrderController@scheduleToShip',
+        ]);
+
+        $api->post('/ship', [
+            'uses' => 'OrderController@ship',
+        ]);
+
+
         $api->group(['prefix' => '/{odrHdrId:[0-9]+}'], function ($api) {
             $api->get('/', [
                 'uses' => 'OrderController@show',
@@ -25,6 +38,10 @@ $api->group([
 
             $api->put('/', [
                 'uses' => 'OrderController@update',
+            ]);
+
+            $api->put('/remark', [
+                'uses' => 'OrderController@updateRemark',
             ]);
         });
 
@@ -39,9 +56,27 @@ $api->group([
 
     $api->group(['prefix' => '/whs/{whsId}/wavepick'], function ($api) {
 
+        $api->get('/', [
+            'uses' => 'WavePickController@view',
+        ]);
+
         $api->post('/', [
             'uses' => 'WavePickController@store',
         ]);
+
+        $api->group(['prefix' => '/{wvHdrId:[0-9]+}'], function ($api) {
+            $api->get('/', [
+                'uses' => 'WavePickController@show',
+            ]);
+
+            $api->get('/dtl/{wvDtlId:[0-9]+}/suggest-location', [
+                'uses' => 'WavePickController@suggestLocation',
+            ]);
+
+            $api->post('/dtl/{wvDtlId:[0-9]+}', [
+                'uses' => 'WavePickController@pick',
+            ]);
+        });
 
     });
 });
