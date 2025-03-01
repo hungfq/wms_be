@@ -9,6 +9,21 @@ $api->group([
         $api->get('/all-messages', [
             'uses' => 'LanguageController@getAll',
         ]);
+        $api->get('/language-types', [
+            'uses' => 'LanguageController@languageType',
+        ]);
+        $api->get('/', [
+            'uses' => 'LanguageController@view',
+        ]);
+        $api->post('/', [
+            'uses' => 'LanguageController@store',
+        ]);
+        $api->put('/{lgId:[0-9]+}', [
+            'uses' => 'LanguageController@update',
+        ]);
+        $api->delete('/', [
+            'uses' => 'LanguageController@delete',
+        ]);
     });
 
     $api->group(['prefix' => '/warehouses'], function ($api) {
