@@ -8,16 +8,19 @@ class OrderViewDTO extends FlexibleDataTransferObject
 {
     public $whs_id;
     public $cus_id;
-    public $wv_hdr_num;
+    public $odr_num;
+    public $cus_odr_num;
+    public $cus_po;
+    public $odr_sts;
     public $sku;
-    public $gr_hdr_num;
-    public $po_num;
-    public $ref_code;
-    public $gr_hdr_sts;
-    public $act_date_from;
-    public $act_date_to;
-    public $expt_date_from;
-    public $expt_date_to;
+    public $wv_num;
+    public $ship_to_code;
+    public $ship_to_name;
+    public $created_at_from;
+    public $created_at_to;
+    public $act_shipped_date_from;
+    public $act_shipped_date_to;
+    public $is_drop_orders;
 
     public $export_type;
     public $limit;
@@ -31,16 +34,19 @@ class OrderViewDTO extends FlexibleDataTransferObject
         return new self([
             'whs_id' => $request->input('whs_id'),
             'cus_id' => $request->input('cus_id'),
-            'wv_hdr_num' => $request->input('wv_hdr_num'),
+            'odr_num' => $request->input('odr_num'),
+            'cus_odr_num' => $request->input('cus_odr_num'),
+            'cus_po' => $request->input('cus_po'),
+            'odr_sts' => $request->input('odr_sts'),
             'sku' => $request->input('sku'),
-            'gr_hdr_num' => $request->input('gr_hdr_num'),
-            'po_num' => $request->input('po_num'),
-            'ref_code' => $request->input('ref_code'),
-            'gr_hdr_sts' => $request->input('gr_hdr_sts'),
-            'act_date_from' => $request->input('act_date_from'),
-            'act_date_to' => $request->input('act_date_to'),
-            'expt_date_from' => $request->input('expt_date_from'),
-            'expt_date_to' => $request->input('expt_date_to'),
+            'wv_num' => $request->input('wv_num'),
+            'ship_to_code' => $request->input('ship_to_code'),
+            'ship_to_name' => $request->input('ship_to_name'),
+            'created_at_from' => $request->input('created_at_from'),
+            'created_at_to' => $request->input('created_at_to'),
+            'act_shipped_date_from' => $request->input('act_shipped_date_from'),
+            'act_shipped_date_to' => $request->input('act_shipped_date_to'),
+            'is_drop_orders' => $request->input('is_drop_orders'),
             'export_type' => $request->input('export_type'),
             'limit' => $request->input('limit'),
             'page' => $request->input('page'),

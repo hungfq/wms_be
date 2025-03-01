@@ -33,12 +33,6 @@ class OrderViewInventoryItemAction
         $query = Item::query()
             ->select([
                 'items.item_id',
-                'items.sku',
-                'items.size',
-                'items.color',
-                'items.pack_size',
-                'items.serial',
-                'items.m3',
             ])
             ->where('items.status', Item::STATUS_ACTIVE)
             ->whereHas('inventories', function ($q) {
@@ -114,11 +108,7 @@ class OrderViewInventoryItemAction
                 $invt->setAttribute('lots', $lots);
                 $invt->fill([
                     'item_id' => $firstInvt->item_id,
-                    'sku' => $firstInvt->sku,
-                    'pack_size' => $firstInvt->pack_size,
-                    'serial' => $firstInvt->serial,
-                    'm3' => $firstInvt->m3,
-                    'item' => $firstInvt->item
+                    'item' => $firstInvt->item,
                 ]);
 
                 $this->invtCollect->push($invt);

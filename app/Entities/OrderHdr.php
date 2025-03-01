@@ -73,11 +73,6 @@ class OrderHdr extends BaseSoftModel implements StatusRelationshipInterface
         return $this->belongsTo(WvHdr::class, 'wv_id', 'id');
     }
 
-    public function transferWarehouse()
-    {
-        return $this->belongsTo(Warehouse::class, 'transfer_whs_id', 'whs_id');
-    }
-
     public function getStatusColumn()
     {
         return 'odr_sts';

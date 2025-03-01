@@ -84,7 +84,6 @@ class WvHdr extends BaseSoftModel
         $currentYearMonth = date('ym');
         $defaultNum = "WV-${currentYearMonth}-000001";
         $wvHdr = DB::table(WvHdr::getTableName())
-            ->where('whs_id', Data::getCurWhs())
             ->orderBy('id', 'desc')
             ->first();
 

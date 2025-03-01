@@ -2,7 +2,6 @@
 
 namespace App\Modules\Outbound\Actions;
 
-use App\Entities\ContainerType;
 use App\Entities\Department;
 use App\Entities\OdrType;
 use App\Entities\OrderDtl;
@@ -11,12 +10,12 @@ use App\Entities\ThirdParty;
 use App\Entities\Warehouse;
 use App\Exceptions\UserException;
 use App\Libraries\Language;
-use App\Modules\Outbound\DTO\OrderCreateDTO;
+use App\Modules\Outbound\DTO\OrderUpdateDTO;
 use Illuminate\Support\Arr;
 
-class OrderCreateAction
+class OrderUpdateAction
 {
-    public OrderCreateDTO $dto;
+    public OrderUpdateDTO $dto;
     public $warehouse;
     public $odrType;
     public $department;
@@ -24,20 +23,25 @@ class OrderCreateAction
     public $events;
 
     /**
-     * @param OrderCreateDTO $dto
+     * @param OrderUpdateDTO $dto
      */
     public function handle($dto)
     {
         $this->dto = $dto;
 
         $this->checkData()
-            ->makeOrderHdr()
-            ->makeOrderDetail()
+            ->updateOrderHdr()
+            ->updateOrderDetail()
             ->eventTracking();
     }
 
     public function checkData()
     {
+        $this->orderHdr = OrderHdr::query()->find($this->dto->odr_hdr_id);
+        if (!$this->orderHdr) {
+            throw new UserException(Language::translate('Order does not exist'));
+        }
+
         $this->warehouse = Warehouse::query()->find($this->dto->whs_id);
         if (!$this->warehouse) {
             throw new UserException(Language::translate('Warehouse not found'));
@@ -55,13 +59,6 @@ class OrderCreateAction
             }
         }
 
-        if ($this->dto->container_type_id) {
-            $containerType = ContainerType::query()->find($this->dto->container_type_id);
-            if (!$containerType) {
-                throw new UserException(Language::translate('Container type not found'));
-            }
-        }
-
         if ($this->dto->odr_type == OrderHdr::TYPE_NISSIN_BACK_ORDER) {
             throw new UserException(Language::translate(
                 "Can't create order with order type {0}. Please contact admin for support!",
@@ -72,14 +69,11 @@ class OrderCreateAction
         return $this;
     }
 
-    public function makeOrderHdr()
+    public function updateOrderHdr()
     {
         $tpId = $this->createOrUpdateThirdParty(data_get($this->dto, 'cus_id'), $this->dto->toArray());
 
         $params = [
-            'odr_num' => OrderHdr::generateOrderNum(),
-            'cus_id' => data_get($this->dto, 'cus_id'),
-            'whs_id' => data_get($this->dto, 'whs_id'),
             'cus_odr_num' => data_get($this->dto, 'cus_odr_num'),
             'cus_po' => data_get($this->dto, 'cus_po'),
             'odr_type' => data_get($this->dto, 'odr_type'),
@@ -106,61 +100,87 @@ class OrderCreateAction
             'ship_by_dt' => data_get($this->dto, 'ship_by_dt'),
             'in_notes' => data_get($this->dto, 'in_notes'),
             'cus_notes' => data_get($this->dto, 'cus_notes'),
-            'odr_sts' => OrderHdr::STS_NEW,
             'sku_ttl' => count(Arr::pluck(data_get($this->dto, 'details'), 'item_id', 'item_id')),
 
             'bl_no' => data_get($this->dto, 'bl_no'),
-            'job_no' => OrderHdr::generateJobNo($this->warehouse, $this->department),
             'invoice_no' => data_get($this->dto, 'invoice_no'),
-
             'amount' => data_get($this->dto, 'amount'),
         ];
 
-        $this->orderHdr = OrderHdr::query()->create($params);
+        $this->orderHdr->update($params);
 
 //        $this->events[] = [
 //            'cus_id' => data_get($this->orderHdr, 'cus_id'),
-//            'event_code' => EventTracking::ORDER_CREATE,
+//            'event_code' => EventTracking::ORDER_UPDATE,
 //            'owner' => data_get($this->orderHdr, 'odr_num'),
 //            'transaction' => data_get($this->orderHdr, 'cus_odr_num'),
-//            'info' => '{0} created',
+//            'info' => '{0} updated',
 //            'info_params' => [data_get($this->orderHdr, 'odr_num')],
 //        ];
 
         return $this;
     }
 
-    public function makeOrderDetail()
+    public function updateOrderDetail()
     {
-        $details = data_get($this->dto, 'details');
+        if ($this->orderHdr->odr_sts == OrderHdr::STS_NEW) {
+            $details = data_get($this->dto, 'details');
 
-        foreach ($details as $detail) {
-            $this->orderHdr->orderDtls()->create([
-                'whs_id' => data_get($this->dto, 'whs_id'),
-                'cus_id' => data_get($this->dto, 'cus_id'),
-                'odr_id' => $this->orderHdr->id,
-                'item_id' => data_get($detail, 'item_id'),
-                'bin_loc_id' => data_get($detail, 'bin_loc_id', 1),
-                'lot' => data_get($detail, 'lot'),
-                'is_retail' => data_get($detail, 'is_retail', 0),
-                'ctn_ttl' => (int)data_get($detail, 'ctn_ttl'),
-                'piece_qty' => (int)data_get($detail, 'piece_qty'),
-                'price' => (int)data_get($detail, 'price'),
-                'odr_dtl_sts' => OrderDtl::STS_NEW,
-            ]);
+            $odrDtlIds = [];
+            foreach ($details as $detail) {
 
-//            $this->events[] = [
-//                'cus_id' => $this->orderHdr->cus_id,
-//                'event_code' => EventTracking::ORDER_CREATE,
-//                'owner' => $this->orderHdr->odr_num,
-//                'transaction' => $this->orderHdr->cus_odr_num,
-//                'info' => '{0} {1} has been created by {2}',
-//                'info_params' => [
-//                    data_get($detail, 'piece_qty'),
-//                    data_get($detail, 'sku'),
-//                    $this->orderHdr->odr_num
-//                ]
-//            ];
+                if ($dtlId = data_get($detail, 'odr_dtl_id')) {
+                    OrderDtl::query()
+                        ->where('id', $dtlId)
+                        ->update([
+                            'item_id' => data_get($detail, 'item_id'),
+                            'bin_loc_id' => data_get($detail, 'bin_loc_id', 1),
+                            'lot' => data_get($detail, 'lot'),
+                            'is_retail' => data_get($detail, 'is_retail', 0),
+                            'ctn_ttl' => (int)data_get($detail, 'ctn_ttl'),
+                            'piece_qty' => (int)data_get($detail, 'piece_qty'),
+                            'price' => (int)data_get($detail, 'price'),
+                        ]);
+
+                    $odrDtlIds[] = $dtlId;
+                } else {
+                    $newDetail = $this->orderHdr->orderDtls()->create([
+                        'whs_id' => data_get($this->dto, 'whs_id'),
+                        'cus_id' => data_get($this->dto, 'cus_id'),
+                        'odr_id' => $this->orderHdr->id,
+                        'item_id' => data_get($detail, 'item_id'),
+                        'bin_loc_id' => data_get($detail, 'bin_loc_id', 1),
+                        'lot' => data_get($detail, 'lot'),
+                        'is_retail' => data_get($detail, 'is_retail', 0),
+                        'ctn_ttl' => (int)data_get($detail, 'ctn_ttl'),
+                        'piece_qty' => (int)data_get($detail, 'piece_qty'),
+                        'price' => (int)data_get($detail, 'price'),
+                        'odr_dtl_sts' => OrderDtl::STS_NEW,
+                    ]);
+
+                    $odrDtlIds[] = $newDetail->id;
+                }
+
+//                $this->events[] = [
+//                    'cus_id' => $this->orderHdr->cus_id,
+//                    'event_code' => EventTracking::ORDER_UPDATE,
+//                    'owner' => $this->orderHdr->odr_num,
+//                    'transaction' => $this->orderHdr->cus_odr_num,
+//                    'info' => '{0} {1} has been updated by {2}',
+//                    'info_params' => [
+//                        data_get($detail, 'piece_qty'),
+//                        data_get($detail, 'sku'),
+//                        $this->orderHdr->odr_num
+//                    ],
+//                ];
+            }
+
+            if ($odrDtlIds) {
+                OrderDtl::query()
+                    ->where('odr_id', data_get($this->orderHdr, 'id'))
+                    ->whereNotIn('id', $odrDtlIds)
+                    ->delete();
+            }
         }
 
         return $this;

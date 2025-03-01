@@ -11,12 +11,9 @@ class OrderViewInventoryItemTransformer extends TransformerAbstract
         return [
             'item_id' => data_get($model, 'item_id'),
             'sku' => data_get($model, 'item.sku'),
-            'item_code' => data_get($model, 'item.item_code'),
             'item_name' => data_get($model, 'item.item_name'),
-            'size' => data_get($model, 'item.size'),
-            'color' => data_get($model, 'item.color'),
             'pack_size' => data_get($model, 'item.pack_size'),
-            'serial' => data_get($model, 'item.serial'),
+            'price_suggest' => data_get($model, 'item.price_suggest'),
             'm3' => data_get($model, 'item.m3'),
             'lots' => data_get($model, 'lots')
         ];

@@ -14,12 +14,34 @@ $api->group([
             'uses' => 'OrderController@store',
         ]);
 
-
-        $api->get('/search-item', [
-            'uses' => 'OrderInventoryController@searchItem',
+        $api->post('/allocates', [
+            'uses' => 'OrderController@allocateMultiple',
         ]);
+
+        $api->group(['prefix' => '/{odrHdrId:[0-9]+}'], function ($api) {
+            $api->get('/', [
+                'uses' => 'OrderController@show',
+            ]);
+
+            $api->put('/', [
+                'uses' => 'OrderController@update',
+            ]);
+        });
+
+        $api->group(['prefix' => '/auto'], function ($api) {
+            $api->get('/search-item', [
+                'uses' => 'OrderInventoryController@searchItem',
+            ]);
+        });
+
 
     });
 
+    $api->group(['prefix' => '/whs/{whsId}/wavepick'], function ($api) {
 
+        $api->post('/', [
+            'uses' => 'WavePickController@store',
+        ]);
+
+    });
 });
