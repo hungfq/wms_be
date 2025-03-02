@@ -8,19 +8,19 @@ $api->group([
     $api->group(['prefix' => '/dashboard/whs/{whsId}'], function ($api) {
 
         $api->get('/po', [
-            'uses' => 'ApiDashboardController@getDashboardTmp',
+            'uses' => 'ApiDashboardController@getStatisticPo',
         ]);
 
         $api->get('/wave-pick', [
-            'uses' => 'ApiDashboardController@getDashboardTmp',
+            'uses' => 'ApiDashboardController@getStatisticWavePick',
         ]);
 
         $api->get('/order', [
-            'uses' => 'ApiDashboardController@getDashboardTmp',
+            'uses' => 'ApiDashboardController@getStatisticOrder',
         ]);
 
         $api->get('/location-capacity', [
-            'uses' => 'ApiDashboardController@getDashboardTmp',
+            'uses' => 'ApiDashboardController@getStatisticLocationCapacity',
         ]);
 
         $api->get('/replenishment', [
