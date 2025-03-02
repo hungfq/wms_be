@@ -61,11 +61,6 @@ class Item extends BaseSoftModel implements StatusRelationshipInterface
         return $this->hasMany(ItemImage::class, 'item_id');
     }
 
-    public function vendors()
-    {
-        return $this->belongsToMany(Vendor::class, 'item_vendor', 'item_id', 'vendor_id');
-    }
-
     public function inventories()
     {
         return $this->hasMany(Inventory::class, 'item_id');

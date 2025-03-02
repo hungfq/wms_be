@@ -7,9 +7,11 @@ use App\Entities\ContainerType;
 use App\Entities\Country;
 use App\Entities\Customer;
 use App\Entities\Department;
+use App\Entities\ItemCategory;
 use App\Entities\OdrType;
 use App\Entities\PoType;
 use App\Entities\State;
+use App\Entities\Uom;
 use App\Entities\User;
 use App\Http\Controllers\ApiController;
 use App\Libraries\Data;
@@ -93,6 +95,20 @@ class DropdownController extends ApiController
     public function department(BinLocTransformer $transformer)
     {
         $query = Department::query();
+
+        return $this->response->collection($query->get(), $transformer);
+    }
+
+    public function itemCategory(BinLocTransformer $transformer)
+    {
+        $query = ItemCategory::query();
+
+        return $this->response->collection($query->get(), $transformer);
+    }
+
+    public function uom(BinLocTransformer $transformer)
+    {
+        $query = Uom::query();
 
         return $this->response->collection($query->get(), $transformer);
     }

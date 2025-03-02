@@ -95,6 +95,12 @@ $api->group([
         $api->get('/departments', [
             'uses' => 'DropdownController@department',
         ]);
+        $api->get('/item-categories', [
+            'uses' => 'DropdownController@itemCategory',
+        ]);
+        $api->get('/uoms', [
+            'uses' => 'DropdownController@uom',
+        ]);
     });
 
     $api->group(['prefix' => '/autocomplete'], function ($api) {
@@ -127,6 +133,21 @@ $api->group([
         ]);
         $api->put('/{tpId}', [
             'uses' => 'ThirdPartyController@update',
+        ]);
+    });
+
+    $api->group(['prefix' => '/items'], function ($api) {
+        $api->get('/', [
+            'uses' => 'ItemController@view',
+        ]);
+        $api->post('/', [
+            'uses' => 'ItemController@store',
+        ]);
+        $api->get('/{itemId}', [
+            'uses' => 'ItemController@show',
+        ]);
+        $api->put('/{itemId}', [
+            'uses' => 'ItemController@update',
         ]);
     });
 
