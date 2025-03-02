@@ -15,6 +15,10 @@ $api->group([
             'uses' => 'PoController@store',
         ]);
 
+        $api->put('/cancel', [
+            'uses' => 'PoController@cancel',
+        ]);
+
         $api->group(['prefix' => '/{poHdrId:[0-9]+}'], function ($api) {
             $api->get('/', [
                 'uses' => 'PoController@show',
@@ -23,6 +27,10 @@ $api->group([
             $api->put('/', [
 //            'as' => 'po.update',
                 'uses' => 'PoController@update',
+            ]);
+
+            $api->put('/complete', [
+                'uses' => 'PoController@complete',
             ]);
         });
     });

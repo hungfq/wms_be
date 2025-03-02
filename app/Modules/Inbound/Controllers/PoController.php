@@ -6,6 +6,8 @@ use App\Entities\PoHdr;
 use App\Exceptions\UserException;
 use App\Http\Controllers\ApiController;
 use App\Libraries\Language;
+use App\Modules\Inbound\Actions\PO\PoCancelAction;
+use App\Modules\Inbound\Actions\PO\PoCompleteAction;
 use App\Modules\Inbound\Actions\PO\PoStoreAction;
 use App\Modules\Inbound\Actions\PO\PoUpdateAction;
 use App\Modules\Inbound\Actions\PO\PoViewAction;
@@ -83,5 +85,32 @@ class PoController extends ApiController
         });
 
         return $this->responseSuccess(Language::translate('Update PO Successfully.'));
+    }
+
+    public function cancel($whsId, PoCancelAction $action)
+    {
+        $this->request->merge([
+            'whs_id' => $whsId,
+        ]);
+
+        DB::transaction(function () use ($action) {
+            $action->handle($this->request->all());
+        });
+
+        return $this->responseSuccess(Language::translate('Cancel Purchase Order Successfully!'));
+    }
+
+    public function complete($whsId, $poHdrId, PoCompleteAction $action)
+    {
+        $this->request->merge([
+            'whs_id' => $whsId,
+            'po_hdr_id' => $poHdrId,
+        ]);
+
+        DB::transaction(function () use ($action, $poHdrId) {
+            $action->handle($poHdrId);
+        });
+
+        return $this->responseSuccess(Language::translate('Complete Purchase Order Successfully!'));
     }
 }
