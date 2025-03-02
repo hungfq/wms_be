@@ -8,6 +8,7 @@ use App\Modules\Outbound\Actions\OrderAllocateAction;
 use App\Modules\Outbound\Actions\OrderCancelAction;
 use App\Modules\Outbound\Actions\OrderCreateAction;
 use App\Modules\Outbound\Actions\OrderOutSortAction;
+use App\Modules\Outbound\Actions\OrderPrintDeliveryNoteAction;
 use App\Modules\Outbound\Actions\OrderRevertAction;
 use App\Modules\Outbound\Actions\OrderScheduleToShipAction;
 use App\Modules\Outbound\Actions\OrderShipAction;
@@ -15,6 +16,7 @@ use App\Modules\Outbound\Actions\OrderShowAction;
 use App\Modules\Outbound\Actions\OrderUpdateAction;
 use App\Modules\Outbound\Actions\OrderUpdateRemarkAction;
 use App\Modules\Outbound\Actions\OrderViewAction;
+use App\Modules\Outbound\DTO\OrderPrintDeliveryNoteDTO;
 use App\Modules\Outbound\DTO\OrderUpdateRemarkDTO;
 use App\Modules\Outbound\DTO\OrderViewDTO;
 use App\Modules\Outbound\Transformers\OrderShowTransformer;
@@ -202,5 +204,17 @@ class OrderController extends ApiController
         });
 
         return $this->responseSuccess(Language::translate('Cancel Order(s) Successfully.'));
+    }
+
+    public function printDeliveryNote($whsId, $odrHdrId, OrderPrintDeliveryNoteAction $action)
+    {
+        $this->request->merge([
+            'whs_id' => $whsId,
+            'odr_hdr_id' => $odrHdrId,
+        ]);
+
+        return $action->handle(
+            OrderPrintDeliveryNoteDTO::fromRequest()
+        );
     }
 }

@@ -50,6 +50,10 @@ $api->group([
             $api->put('/remark', [
                 'uses' => 'OrderController@updateRemark',
             ]);
+
+            $api->get('/print-delivery-note', [
+                'uses' => 'OrderController@printDeliveryNote',
+            ]);
         });
 
         $api->group(['prefix' => '/auto'], function ($api) {
