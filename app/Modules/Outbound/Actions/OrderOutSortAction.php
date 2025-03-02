@@ -3,6 +3,7 @@
 namespace App\Modules\Outbound\Actions;
 
 use App\Entities\Carton;
+use App\Entities\EventLog;
 use App\Entities\OrderDtl;
 use App\Entities\OrderHdr;
 use App\Entities\Pallet;
@@ -16,7 +17,7 @@ class OrderOutSortAction
     public $odrHdr;
     public $whsId;
     public $odrDtl;
-    public $events;
+    public $events = [];
     public $pltIds;
 
     /**
@@ -189,16 +190,15 @@ class OrderOutSortAction
         if (!$odrNotSorted) {
             $this->odrHdr->odr_sts = OrderHdr::STS_OUT_SORTED;
 
-//            $this->events[] = [
-//                'cus_id' => $this->odrHdr->cus_id,
-//                'owner' => $this->odrHdr->odr_num,
-//                'transaction' => $this->odrHdr->cus_odr_num,
-//                'event_code' => EventTracking::GUN_ORDER_OUT_SORTED,
-//                'info' => 'Order {0} has been out sorted',
-//                'info_params' => [
-//                    $this->odrHdr->odr_num
-//                ],
-//            ];
+            $this->events[] = [
+                'whs_id' => data_get($this->odrHdr, 'whs_id'),
+                'owner' => $this->odrHdr->odr_num,
+                'event_code' => EventLog::ORDER_OUT_SORTED,
+                'info' => 'Order {0} has been out sorted',
+                'info_params' => [
+                    $this->odrHdr->odr_num
+                ],
+            ];
         }
 
         $this->odrHdr->save();
@@ -250,8 +250,8 @@ class OrderOutSortAction
 
     public function eventTracking()
     {
-//        foreach ($this->events as $event) {
-//            event(new EventTracking($event));
-//        }
+        foreach ($this->events as $evt) {
+            EventLog::query()->create($evt);
+        }
     }
 }

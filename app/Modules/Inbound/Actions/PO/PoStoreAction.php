@@ -2,6 +2,7 @@
 
 namespace App\Modules\Inbound\Actions\PO;
 
+use App\Entities\EventLog;
 use App\Entities\PoHdr;
 use App\Exceptions\UserException;
 use App\Libraries\Config;
@@ -87,14 +88,13 @@ class PoStoreAction
 
     public function createEventTracking()
     {
-//        event(new EventTracking([
-//            'cus_id' => $this->dto->cus_id,
-//            'event_code' => EventTracking::PO_CREATE,
-//            'owner' => $this->poHdr->po_num,
-//            'transaction' => $this->poHdr->po_num,
-//            'info' => 'Create PO #{0} successful',
-//            'info_params' => [$this->poHdr->po_num],
-//        ]));
+        EventLog::query()->create([
+            'whs_id' => $this->dto->whs_id,
+            'event_code' => EventLog::PO_CREATE,
+            'owner' => $this->poHdr->po_num,
+            'info' => 'Create PO #{0} successful',
+            'info_params' => [$this->poHdr->po_num],
+        ]);
 
         return $this;
     }

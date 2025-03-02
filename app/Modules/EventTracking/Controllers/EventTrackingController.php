@@ -3,11 +3,15 @@
 namespace App\Modules\EventTracking\Controllers;
 
 use App\Http\Controllers\ApiController;
+use App\Modules\EventTracking\Actions\EventViewAction;
+use App\Modules\EventTracking\Transformers\EventViewTransformer;
 
 class EventTrackingController extends ApiController
 {
-    public function viewTmp()
+    public function view(EventViewAction $action, EventViewTransformer $transformer)
     {
-        return ['data' => []];
+        $data = $action->handle($this->request->all());
+
+        return $this->response->paginator($data, $transformer);
     }
 }

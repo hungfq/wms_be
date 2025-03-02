@@ -4,6 +4,7 @@ namespace App\Modules\Outbound\Actions;
 
 use App\Entities\BinLocation;
 use App\Entities\Carton;
+use App\Entities\EventLog;
 use App\Entities\Item;
 use App\Entities\Location;
 use App\Entities\OdrCarton;
@@ -44,7 +45,7 @@ class WavePickPickingAction
 
     public $algorithm;
     public $actPickedQty;
-    public $events;
+    public $events = [];
     protected $multiPickingQty;
     protected $firstBinLoc;
 
@@ -635,14 +636,13 @@ class WavePickPickingAction
                         'odr_sts' => OrderDtl::STS_PICKED
                     ]);
 
-//                    $this->events[] = [
-//                        'cus_id' => $odrHdr->cus_id,
-//                        'owner' => $odrHdr->odr_num,
-//                        'transaction' => $odrHdr->cus_odr_num,
-//                        'event_code' => EventTracking::GUN_ORDER_PICKED,
-//                        'info' => 'Order {0} picked by {1}',
-//                        'info_params' => [$odrHdr->odr_num, $this->wvHdr->wv_hdr_num],
-//                    ];
+                    $this->events[] = [
+                        'whs_id' => $this->dto->whs_id,
+                        'owner' => $odrHdr->odr_num,
+                        'event_code' => EventLog::ORDER_PICKED,
+                        'info' => 'Order {0} picked by {1}',
+                        'info_params' => [$odrHdr->odr_num, $this->wvHdr->wv_hdr_num],
+                    ];
                 }
             }
         });
@@ -799,14 +799,13 @@ class WavePickPickingAction
                         'odr_sts' => OrderDtl::STS_PICKED
                     ]);
 
-//                    $this->events[] = [
-//                        'cus_id' => $odrHdr->cus_id,
-//                        'owner' => $odrHdr->odr_num,
-//                        'transaction' => $odrHdr->cus_odr_num,
-//                        'event_code' => EventTracking::GUN_ORDER_PICKED,
-//                        'info' => 'Order {0} picked by {1}',
-//                        'info_params' => [$odrHdr->odr_num, $this->wvHdr->wv_hdr_num],
-//                    ];
+                    $this->events[] = [
+                        'whs_id' => $this->dto->whs_id,
+                        'owner' => $odrHdr->odr_num,
+                        'event_code' => EventLog::ORDER_PICKED,
+                        'info' => 'Order {0} picked by {1}',
+                        'info_params' => [$odrHdr->odr_num, $this->wvHdr->wv_hdr_num],
+                    ];
                 }
             }
         });
@@ -832,19 +831,18 @@ class WavePickPickingAction
                 $this->wvDtl->wv_dtl_sts = $pickedSts;
             }
 
-//            $this->events[] = [
-//                'cus_id' => $this->wvDtl->cus_id,
-//                'event_code' => EventTracking::GUN_WAVE_PICK_PICKING,
-//                'owner' => $this->wvHdr->wv_hdr_num,
-//                'transaction' => $this->wvHdr->wv_hdr_num,
-//                'info' => '{0} {1}, Batch {2} have been picked for {3}',
-//                'info_params' => [
-//                    $qtyPicking,
-//                    $this->wvDtl->item->sku,
-//                    $this->wvDtl->lot,
-//                    $this->wvHdr->wv_hdr_num
-//                ],
-//            ];
+            $this->events[] = [
+                'whs_id' => $this->dto->whs_id,
+                'owner' => $this->wvHdr->wv_hdr_num,
+                'event_code' => EventLog::WAVE_PICK_PICKING,
+                'info' => '{0} {1}, Batch {2} have been picked from {3}',
+                'info_params' => [
+                    $qtyPicking,
+                    $this->wvDtl->item->sku,
+                    $this->wvDtl->lot,
+                    data_get($this->location, 'loc_code'),
+                ],
+            ];
         } else {
             $this->wvDtl->piece_qty -= $qtyPicking;
 
@@ -864,21 +862,15 @@ class WavePickPickingAction
                 'wv_hdr_sts' => WvHdr::STS_PICKED
             ]);
 
-//            $this->events[] = [
-//                'cus_id' => $this->wvDtl->cus_id,
-//                'event_code' => EventTracking::GUN_WAVE_PICK_PICKED,
-//                'owner' => $this->wvHdr->wv_hdr_num,
-//                'transaction' => $this->wvHdr->wv_hdr_num,
-//                'info' => 'Wave Pick {0} have been picked',
-//                'info_params' => [
-//                    $this->wvHdr->wv_hdr_num
-//                ],
-//            ];
-
-            //BillableService::process(ChargeCode::FROM_WAVE_PICK, [
-            //    'wv_hdr_id' => $this->wvHdr->id,
-            //    'cus_id' => 1,
-            //]);
+            $this->events[] = [
+                'whs_id' => $this->dto->whs_id,
+                'owner' => $this->wvHdr->wv_hdr_num,
+                'event_code' => EventLog::WAVE_PICK_PICKED,
+                'info' => 'Wave Pick {0} have been picked',
+                'info_params' => [
+                    $this->wvHdr->wv_hdr_num
+                ],
+            ];
         } else {
             if (data_get($this->wvHdr, 'wv_hdr_sts') != WvHdr::STS_PICKING) {
                 $this->wvHdr->update([
@@ -943,9 +935,9 @@ class WavePickPickingAction
 
     private function eventTracking()
     {
-//        foreach ($this->events as $evtCode => $event) {
-//            event(new EventTracking($event));
-//        }
+        foreach ($this->events as $evt) {
+            EventLog::query()->create($evt);
+        }
 
         return $this;
     }

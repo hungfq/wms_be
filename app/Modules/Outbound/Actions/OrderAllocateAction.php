@@ -2,6 +2,7 @@
 
 namespace App\Modules\Outbound\Actions;
 
+use App\Entities\EventLog;
 use App\Entities\Inventory;
 use App\Entities\OrderDtl;
 use App\Entities\OrderHdr;
@@ -538,16 +539,13 @@ class OrderAllocateAction
             'allocate_at' => date('Y-m-d H:i:s'),
         ]);
 
-//        $this->events[] = [
-//            'cus_id' => $this->odrHdr->cus_id,
-//            'event_code' => EventTracking::ORDER_ALLOCATE,
-//            'owner' => $this->odrHdr->odr_num,
-//            'transaction' => $this->odrHdr->cus_odr_num,
-//            'info' => '{0} allocated',
-//            'info_params' => [
-//                $this->odrHdr->odr_num
-//            ]
-//        ];
+        $this->events[] = [
+            'whs_id' => $this->dto->whs_id,
+            'event_code' => EventLog::ORDER_ALLOCATE,
+            'owner' => data_get($this->odrHdr, 'odr_num'),
+            'info' => '{0} allocated',
+            'info_params' => [data_get($this->odrHdr, 'odr_num')],
+        ];
 
         return $this;
     }
@@ -839,14 +837,9 @@ class OrderAllocateAction
 
     public function eventTracking()
     {
-//        foreach ($this->events as $event) {
-//            event(new EventTracking($event));
-//        }
-//
-//        event(new SyncErpEvent([
-//            'type' => SyncErpEvent::ORDER_UPDATE_STATUS,
-//            'odr_hdr_ids' => [data_get($this->odrHdr, 'id')],
-//        ]));
+        foreach ($this->events as $evt) {
+            EventLog::query()->create($evt);
+        }
 
         return $this;
     }

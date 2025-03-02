@@ -2,6 +2,7 @@
 
 namespace App\Modules\Outbound\Actions;
 
+use App\Entities\EventLog;
 use App\Entities\OrderHdr;
 use App\Entities\Warehouse;
 use App\Entities\WhsConfig;
@@ -17,7 +18,7 @@ class WavePickCreateAction
 {
     public WavePickCreateDTO $dto;
     public $odrHdrs;
-    public $events;
+    public $events = [];
     public $wvHdrs = [];
 
     /**
@@ -111,14 +112,13 @@ class WavePickCreateAction
 
             $wvHdr->wvDtls()->createMany($wvDtls);
 
-//            $this->events[] = [
-//                'owner' => $wvHdr->wv_hdr_num,
-//                'transaction' => $wvHdr->wv_hdr_num,
-//                'event_code' => EventTracking::WAVE_PICK_CREATED,
-//                'info' => '{0} has been created',
-//                'info_params' => [$wvHdr->wv_hdr_num],
-//                'params' => [$wvHdr]
-//            ];
+            $this->events[] = [
+                'whs_id' => $this->dto->whs_id,
+                'owner' => $wvHdr->wv_hdr_num,
+                'event_code' => EventLog::WAVE_PICK_CREATED,
+                'info' => '{0} has been created',
+                'info_params' => [$wvHdr->wv_hdr_num],
+            ];
         }
 
         $this->odrHdrs->each(function ($odrHdr) use ($wvHdr, &$events) {
@@ -127,14 +127,13 @@ class WavePickCreateAction
                 'wv_id' => $wvHdr->id
             ]);
 
-//            $this->events[] = [
-//                'owner' => $odrHdr->odr_num,
-//                'transaction' => $odrHdr->odr_num,
-//                'event_code' => EventTracking::ORDER_PICKING,
-//                'info' => '{0} picking, {1} has been created',
-//                'info_params' => [$odrHdr->odr_num, $wvHdr->wv_hdr_num],
-//                'params' => [$odrHdr]
-//            ];
+            $this->events[] = [
+                'whs_id' => $this->dto->whs_id,
+                'owner' => $odrHdr->odr_num,
+                'event_code' => EventLog::ORDER_PICKING,
+                'info' => '{0} picking, {1} has been created',
+                'info_params' => [$odrHdr->odr_num, $wvHdr->wv_hdr_num],
+            ];
         });
 
         $this->wvHdrs[] = $wvHdr;
@@ -175,28 +174,26 @@ class WavePickCreateAction
 
             $wvHdr->wvDtls()->createMany($wvDtls);
 
-//            $this->events[] = [
-//                'owner' => $wvHdr->wv_hdr_num,
-//                'transaction' => $wvHdr->wv_hdr_num,
-//                'event_code' => EventTracking::WAVE_PICK_CREATED,
-//                'info' => '{0} has been created',
-//                'info_params' => [$wvHdr->wv_hdr_num],
-//                'params' => [$wvHdr]
-//            ];
+            $this->events[] = [
+                'whs_id' => $this->dto->whs_id,
+                'owner' => $wvHdr->wv_hdr_num,
+                'event_code' => EventLog::WAVE_PICK_CREATED,
+                'info' => '{0} has been created',
+                'info_params' => [$wvHdr->wv_hdr_num],
+            ];
 
             $odrHdr->update([
                 'odr_sts' => OrderHdr::STS_PICKING,
                 'wv_id' => $wvHdr->id
             ]);
 
-//            $this->events[] = [
-//                'owner' => $odrHdr->odr_num,
-//                'transaction' => $odrHdr->odr_num,
-//                'event_code' => EventTracking::ORDER_PICKING,
-//                'info' => '{0} picking, {1} has been created',
-//                'info_params' => [$odrHdr->odr_num, $wvHdr->wv_hdr_num],
-//                'params' => [$odrHdr]
-//            ];
+            $this->events[] = [
+                'whs_id' => $this->dto->whs_id,
+                'owner' => $odrHdr->odr_num,
+                'event_code' => EventLog::ORDER_PICKING,
+                'info' => '{0} picking, {1} has been created',
+                'info_params' => [$odrHdr->odr_num, $wvHdr->wv_hdr_num],
+            ];
 
             $this->wvHdrs[] = $wvHdr;
         });
@@ -206,14 +203,9 @@ class WavePickCreateAction
 
     public function eventTracking()
     {
-//        foreach ($this->events as $evt) {
-//            event(new EventTracking($evt));
-//        }
-//
-//        event(new SyncErpEvent([
-//            'type' => SyncErpEvent::ORDER_UPDATE_STATUS,
-//            'odr_hdr_ids' => $this->odrHdrs->pluck('id')->toArray(),
-//        ]));
+        foreach ($this->events as $evt) {
+            EventLog::query()->create($evt);
+        }
 
         return $this;
     }

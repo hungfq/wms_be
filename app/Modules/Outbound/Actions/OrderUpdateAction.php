@@ -3,6 +3,7 @@
 namespace App\Modules\Outbound\Actions;
 
 use App\Entities\Department;
+use App\Entities\EventLog;
 use App\Entities\OdrType;
 use App\Entities\OrderDtl;
 use App\Entities\OrderHdr;
@@ -20,7 +21,7 @@ class OrderUpdateAction
     public $odrType;
     public $department;
     public $orderHdr;
-    public $events;
+    public $events = [];
 
     /**
      * @param OrderUpdateDTO $dto
@@ -109,14 +110,13 @@ class OrderUpdateAction
 
         $this->orderHdr->update($params);
 
-//        $this->events[] = [
-//            'cus_id' => data_get($this->orderHdr, 'cus_id'),
-//            'event_code' => EventTracking::ORDER_UPDATE,
-//            'owner' => data_get($this->orderHdr, 'odr_num'),
-//            'transaction' => data_get($this->orderHdr, 'cus_odr_num'),
-//            'info' => '{0} updated',
-//            'info_params' => [data_get($this->orderHdr, 'odr_num')],
-//        ];
+        $this->events[] = [
+            'whs_id' => $this->dto->whs_id,
+            'event_code' => EventLog::ORDER_UPDATE,
+            'owner' => data_get($this->orderHdr, 'odr_num'),
+            'info' => '{0} updated',
+            'info_params' => [data_get($this->orderHdr, 'odr_num')],
+        ];
 
         return $this;
     }
@@ -188,9 +188,9 @@ class OrderUpdateAction
 
     public function eventTracking()
     {
-//        foreach ($this->events as $evt) {
-//            event(new EventTracking($evt));
-//        }
+        foreach ($this->events as $evt) {
+            EventLog::query()->create($evt);
+        }
 
         return $this;
     }

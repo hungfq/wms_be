@@ -2,6 +2,7 @@
 
 namespace App\Modules\Inbound\Actions\PO;
 
+use App\Entities\EventLog;
 use App\Entities\PoDtl;
 use App\Entities\PoHdr;
 use App\Exceptions\UserException;
@@ -134,14 +135,13 @@ class PoUpdateAction
 
     public function createEventTracking()
     {
-//        event(new EventTracking([
-//            'cus_id' => $this->dto->cus_id,
-//            'event_code' => EventTracking::PO_UPDATE,
-//            'owner' => $this->poHdr->po_num,
-//            'transaction' => $this->poHdr->po_num,
-//            'info' => 'Update PO #{0} successful',
-//            'info_params' => [$this->poHdr->po_num],
-//        ]));
+        EventLog::query()->create([
+            'whs_id' => $this->dto->whs_id,
+            'event_code' => EventLog::PO_UPDATE,
+            'owner' => $this->poHdr->po_num,
+            'info' => 'Update PO #{0} successful',
+            'info_params' => [$this->poHdr->po_num],
+        ]);
 
         return $this;
     }

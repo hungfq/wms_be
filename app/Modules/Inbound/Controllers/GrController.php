@@ -3,6 +3,7 @@
 namespace App\Modules\Inbound\Controllers;
 
 use App\Entities\Carton;
+use App\Entities\EventLog;
 use App\Entities\GrDtl;
 use App\Entities\GrHdr;
 use App\Entities\GrLog;
@@ -247,6 +248,14 @@ class GrController extends ApiController
         $grHdr->putaway_cmpl_date = date('Y-m-d');
         $grHdr->gr_hdr_sts = GrHdr::STS_COMPLETE;
         $grHdr->save();
+
+        EventLog::query()->create([
+            'whs_id' => $grHdr->whs_id,
+            'event_code' => EventLog::GR_COMPLETE,
+            'owner' => $grHdr->gr_hdr_num,
+            'info' => 'Complete GR {0} successful',
+            'info_params' => [$grHdr->gr_hdr_num],
+        ]);
 
         if (GrHdr::query()->where('po_hdr_id', $grHdr->po_hdr_id)->where('gr_hdr_sts', '<>', GrHdr::STS_COMPLETE)->count() == 0) {
             $sql = "(SELECT COUNT(1) FROM po_dtl

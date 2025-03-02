@@ -3,6 +3,7 @@
 namespace App\Modules\Outbound\Actions;
 
 use App\Entities\Carton;
+use App\Entities\EventLog;
 use App\Entities\Inventory;
 use App\Entities\OdrDrop;
 use App\Entities\OrderDtl;
@@ -143,18 +144,17 @@ class OrderShipAction
 
     protected function createEventTracking()
     {
-//        foreach ($this->odrHdrs as $orderHdr) {
-//            event(new EventTracking([
-//                'cus_id' => $orderHdr->cus_id,
-//                'event_code' => EventTracking::ORDER_SHIP,
-//                'owner' => $orderHdr->odr_num,
-//                'transaction' => $orderHdr->cus_odr_num,
-//                'info' => "{0} shipped",
-//                'info_params' => [
-//                    $orderHdr->odr_num
-//                ],
-//            ]));
-//        }
+        foreach ($this->odrHdrs as $orderHdr) {
+            EventLog::query()->create([
+                'whs_id' => $this->dto->whs_id,
+                'event_code' => EventLog::ORDER_SHIP,
+                'owner' => $orderHdr->odr_num,
+                'info' => "{0} shipped",
+                'info_params' => [
+                    $orderHdr->odr_num
+                ],
+            ]);
+        }
     }
 
     protected function performTransaction($dataId, $callback)

@@ -4,6 +4,7 @@ namespace App\Modules\Barcode\Actions;
 
 use App\Entities\Carton;
 use App\Entities\Container;
+use App\Entities\EventLog;
 use App\Entities\GrDtl;
 use App\Entities\GrHdr;
 use App\Entities\Location;
@@ -29,7 +30,7 @@ class BarcodeInboundReceiveAction
     public $grDtl;
     public $ctnQty;
     public $item;
-    public $events;
+    public $events = [];
     public $toLocation;
 
     /**
@@ -49,7 +50,8 @@ class BarcodeInboundReceiveAction
             ->createCartons()
             ->updatePoDtl()
             ->updatePoHdr()
-            ->updatePutawayPutter();
+            ->updatePutawayPutter()
+            ->createEventLogs();
     }
 
     public function validateData()
@@ -314,10 +316,12 @@ class BarcodeInboundReceiveAction
 
         $this->grHdr = $this->createGoodsReceiptByContainer($this->container->ctnr_id);
 
-        $this->events['GRCR'] = [
+        $this->events[] = [
+            'whs_id' => $this->dto->whs_id,
+            'event_code' => EventLog::GR_CREATE,
+            'owner' => $this->grHdr->gr_hdr_num,
             'info' => 'GUN - Create GR #{0} successful',
             'info_params' => [$this->grHdr->gr_hdr_num],
-            'params' => [$this->grHdr]
         ];
 
         return $this;
@@ -446,6 +450,15 @@ class BarcodeInboundReceiveAction
             $this->grHdr->update([
                 'putter_id' => Auth::id(),
             ]);
+        }
+
+        return $this;
+    }
+
+    protected function createEventLogs()
+    {
+        foreach ($this->events as $event) {
+            EventLog::query()->create($event);
         }
 
         return $this;

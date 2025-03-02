@@ -6,7 +6,7 @@ $api->group([
 ], function ($api) {
 
     $api->get('/', [
-        'uses' => 'EventTrackingController@viewTmp',
+        'uses' => 'EventTrackingController@view',
     ]);
 
 });
