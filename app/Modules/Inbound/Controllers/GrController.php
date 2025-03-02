@@ -60,7 +60,6 @@ class GrController extends ApiController
             ->where('gr_hdr_id', $grHdrId)
             ->select([
                 'gr_dtl.*',
-                'items.item_code',
                 'items.item_name',
                 'items.sku',
                 'items.size',
@@ -73,17 +72,6 @@ class GrController extends ApiController
                 'po_dtl.exp_ctn_ttl',
                 DB::raw('FORMAT(po_dtl.act_qty * (items.m3 / items.pack_size), 7) as exp_total_m3'),
                 DB::raw('FORMAT((gr_dtl.act_qty) * (items.m3 / items.pack_size), 7) as act_total_m3'),
-                DB::raw('
-                        COALESCE(SUM(
-                            CASE
-                                WHEN MOD(gr_dtl.act_qty, items.pack_size) = 0
-                                    THEN gr_dtl.act_ctn_ttl * items.gross_weight
-                                WHEN FLOOR(gr_dtl.act_qty / items.pack_size) > 0 and MOD(gr_dtl.act_qty, items.pack_size) > 0
-                                    THEN (FLOOR(gr_dtl.act_qty / items.pack_size) * items.gross_weight) + (MOD(gr_dtl.act_qty, items.pack_size) * items.weight)
-                                ELSE gr_dtl.act_qty * items.weight
-                            END
-                        ), 0) as total_weight
-                    ')
             ])
             ->join('po_dtl', function ($q) {
                 $q->on('po_dtl.po_dtl_id', '=', 'gr_dtl.po_dtl_id')

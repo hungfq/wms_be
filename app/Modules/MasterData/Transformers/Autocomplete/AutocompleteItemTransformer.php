@@ -13,7 +13,6 @@ class AutocompleteItemTransformer extends TransformerAbstract
         return [
             'item_id' => data_get($model,'item_id'),
             'item_name' => data_get($model,'item_name'),
-            'item_code' => data_get($model,'item_code'),
             'plt_type_id' => data_get($model,'plt_type_id'),
             'plt_type_name' => data_get($model, 'palletType.name'),
             'sku' => data_get($model,'sku'),
@@ -29,7 +28,6 @@ class AutocompleteItemTransformer extends TransformerAbstract
             'm3' => data_get($model,'m3'),
             'weight' => data_get($model,'weight'),
             'net_weight' => data_get($model,'net_weight'),
-            'gross_weight' => data_get($model,'gross_weight'),
             'volume' => data_get($model,'volume'),
             'status' => data_get($model,'status'),
             'status_name' => data_get($model, 'statuses.sts_name'),

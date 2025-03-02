@@ -38,7 +38,6 @@ class WavePickShowTransformer extends TransformerAbstract
                 'picker_name' => data_get($wvDtl, 'picker.name'),
                 'wv_dtl_sts' => $wvDtl->wv_dtl_sts,
                 'wv_dtl_sts_name' => Config::getStatusName('WV_DTL_STATUS', $wvDtl->wv_dtl_sts),
-                'item_code' => data_get($wvDtl, 'item.item_code'),
                 'item_name' => data_get($wvDtl, 'item.item_name'),
                 'm3' => Helpers::formatNumberTotalM3(data_get($wvDtl, 'item.m3')),
                 'total_m3' => Helpers::formatNumberTotalM3($totalM3),

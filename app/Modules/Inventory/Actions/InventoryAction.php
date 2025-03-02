@@ -31,7 +31,6 @@ class InventoryAction
                 'customers.code as cus_code',
                 'bin_locations.name as bin_loc_name',
                 'bin_locations.code as bin_loc_code',
-                'items.item_code',
                 'items.item_name',
                 'items.sku',
                 'items.pack_size',
@@ -86,7 +85,6 @@ class InventoryAction
 
         Helpers::sortBuilder($query, $dto->toArray(), [
             'cus_name' => 'customers.name',
-            'item_code' => 'items.item_code',
             'item_name' => 'items.item_name',
             'sku' => 'items.sku',
             'bin_loc_code' => 'bin_locations.code',

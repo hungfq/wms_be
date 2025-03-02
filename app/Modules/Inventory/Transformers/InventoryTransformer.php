@@ -21,7 +21,6 @@ class InventoryTransformer extends TransformerAbstract
             'bin_loc_code' => data_get($inventoryObj, 'bin_loc_code'),
             'bin_loc_name' => data_get($inventoryObj, 'bin_loc_name'),
             'item_id' => data_get($inventoryObj, 'item_id'),
-            'item_code' => data_get($inventoryObj, 'item_code'),
             'item_name' => data_get($inventoryObj, 'item_name'),
             'sku' => data_get($inventoryObj, 'sku'),
             'pack_size' => data_get($inventoryObj, 'pack_size'),

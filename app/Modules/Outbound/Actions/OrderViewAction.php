@@ -29,7 +29,6 @@ class OrderViewAction
                         'odr_dtl.id',
                         'odr_dtl.odr_id',
                         'odr_dtl.price',
-                        'items.item_code',
                         'items.item_name',
                         'items.sku as model',
                         'items.m3',
