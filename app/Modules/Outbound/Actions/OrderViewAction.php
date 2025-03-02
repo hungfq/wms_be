@@ -3,8 +3,12 @@
 namespace App\Modules\Outbound\Actions;
 
 use App\Entities\OrderHdr;
+use App\Entities\WhsConfig;
+use App\Libraries\Data;
+use App\Libraries\Export;
 use App\Libraries\Helpers;
 use App\Modules\Outbound\DTO\OrderViewDTO;
+use App\Modules\Outbound\Transformers\OrderViewTransformer;
 use Illuminate\Support\Facades\DB;
 
 class OrderViewAction
@@ -49,7 +53,6 @@ class OrderViewAction
                         });
                 },
                 'department',
-                'splitOrders',
                 'wvHdr',
                 'containerType',
                 'odrType',
@@ -183,10 +186,26 @@ class OrderViewAction
             ->orderBy('odr_hdr.updated_at', 'desc');
 
         if ($this->dto->export_type) {
-            return $query->limit($dto->limit ?? ITEM_PER_PAGE)->get();
+            return $this->handleDataExport($query);
         }
 
         return $query->paginate($dto->limit ?? ITEM_PER_PAGE);
+    }
+
+    public function handleDataExport($query)
+    {
+        $transform = new OrderViewTransformer();
+        $limit = Data::getWhsConfig(WhsConfig::CONFIG_EXPORT_LIMIT);
+
+        $orders = $query->limit($limit)->get();
+
+        $data = $orders->transform(function ($order) use ($transform) {
+            return $transform->transform($order);
+        })->toArray();
+
+        $titles = $transform->getTitleExport();
+
+        return Export::export($this->dto->export_type, $titles, $data, 'OrderList', 'Order List');
     }
 
     public function isExport(): bool
