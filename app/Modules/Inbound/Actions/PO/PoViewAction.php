@@ -24,6 +24,9 @@ class PoViewAction
     {
         $this->dto = $dto;
         $query = PoHdr::query()
+            ->with([
+                'fromVendor',
+            ])
             ->select([
                 'po_hdr.*',
                 'customers.code as cus_code',
@@ -53,9 +56,53 @@ class PoViewAction
             $query->where('po_hdr.whs_id', $this->dto->whs_id);
         }
 
+        if ($this->dto->po_type) {
+            $query->where('po_hdr.po_type', $this->dto->po_type);
+        }
+
         if ($this->dto->po_sts) {
             $poSts = explode(',', $this->dto->po_sts);
             $query->whereIn('po_hdr.po_sts', $poSts);
+        }
+
+        if ($this->dto->po_num) {
+            $query->where('po_hdr.po_num', 'LIKE', "%{$this->dto->po_num}%");
+        }
+
+        if ($this->dto->po_no) {
+            $query->where('po_hdr.po_no', 'LIKE', "%{$this->dto->po_no}%");
+        }
+
+        if ($this->dto->invoice_no) {
+            $query->where('po_hdr.invoice_no', 'LIKE', "%{$this->dto->invoice_no}%");
+        }
+
+        if ($this->dto->sku) {
+            $query->whereHas('poDtls.item', function ($subQuery) {
+                $subQuery->where('sku', 'LIKE', "%{$this->dto->sku}%");
+            });
+        }
+
+        if ($this->dto->from_vendor_name) {
+            $query->whereHas('fromVendor', function ($subQuery) {
+                $subQuery->where('name', 'LIKE', "%{$this->dto->from_vendor_name}%");
+            });
+        }
+
+        if ($this->dto->created_at_from) {
+            $query->whereDate('po_hdr.created_at', '>=', $this->dto->created_at_from);
+        }
+
+        if ($this->dto->created_at_to) {
+            $query->whereDate('po_hdr.created_at', '<=', $this->dto->created_at_to);
+        }
+
+        if ($this->dto->updated_at_from) {
+            $query->whereDate('po_hdr.updated_at', '>=', $this->dto->updated_at_from);
+        }
+
+        if ($this->dto->updated_at_to) {
+            $query->whereDate('po_hdr.updated_at', '<=', $this->dto->updated_at_to);
         }
 
         Helpers::sortBuilder($query, $dto->toArray(), [
