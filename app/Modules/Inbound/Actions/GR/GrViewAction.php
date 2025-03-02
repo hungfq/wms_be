@@ -26,7 +26,6 @@ class GrViewAction
             ->select([
                 'gr_hdr.*',
                 'customers.name AS cus_name',
-                'ctnr.code AS ctnr_name',
                 'sts.sts_name AS gr_hdr_sts_name',
                 'users.name AS created_by_name',
                 'po_hdr.po_num',
@@ -40,7 +39,6 @@ class GrViewAction
             ->join('gr_dtl', 'gr_dtl.gr_hdr_id', '=', 'gr_hdr.gr_hdr_id')
             ->join('po_hdr', 'po_hdr.po_hdr_id', '=', 'gr_hdr.po_hdr_id')
             ->join('customers', 'customers.cus_id', '=', 'gr_hdr.cus_id')
-            ->join('containers AS ctnr', 'ctnr.ctnr_id', '=', 'gr_hdr.ctnr_id')
             ->join('statuses AS sts', 'sts.sts_code', '=', 'gr_hdr.gr_hdr_sts')
             ->join('users', 'users.id', '=', 'gr_hdr.created_by')
             ->leftJoin('users as putter', 'putter.id', '=', 'gr_hdr.putter_id')
@@ -56,20 +54,12 @@ class GrViewAction
             $query->where('gr_hdr.cus_id', $dto->cus_id);
         }
 
-        if ($dto->ctnr_name) {
-            $query->where('ctnr.code', 'like', '%' . $dto->ctnr_name . '%');
-        }
-
         if ($dto->gr_hdr_num) {
-            $query->where('gr_hdr.gr_hdr_num', 'like', '%' . $dto->gr_hdr_num . '%');
+            $query->where('gr_hdr.gr_hdr_num', 'LIKE', '%' . $dto->gr_hdr_num . '%');
         }
 
         if ($dto->po_num) {
-            $query->where('po_hdr.po_num', 'like', '%' . $dto->po_num . '%');
-        }
-
-        if ($dto->ref_code) {
-            $query->where('gr_hdr.ref_code', 'like', '%' . $dto->ref_code . '%');
+            $query->where('po_hdr.po_num', 'LIKE', '%' . $dto->po_num . '%');
         }
 
         if ($dto->gr_hdr_sts) {
@@ -96,15 +86,19 @@ class GrViewAction
             $query->where('po_hdr.po_hdr_id', $value);
         });
 
+        if ($this->dto->sku) {
+            $query->whereHas('grDtls.item', function ($q1) {
+                $q1->where('sku', 'LIKE', '%' . $this->dto->sku . '%');
+            });
+        }
+
         Helpers::sortBuilder($query, $this->dto->toArray(), [
-            'ctnr_name' => 'ctnr.code',
             'gr_hdr_sts_name' => 'gr_hdr_sts_name',
             'cus_name' => 'customers.name',
             'created_by_name' => 'users.name',
             'po_num' => 'po_hdr.po_num',
             'expt_date' => 'po_hdr.expt_date',
             'putter_name' => 'putter.name',
-            'act_dmg_qty' => 'act_dmg_qty',
         ]);
 
         if ($exportType = $dto->export_type) {

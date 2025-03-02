@@ -33,7 +33,6 @@ class OrderHdr extends BaseSoftModel implements StatusRelationshipInterface
     const STS_SCHEDULED_TO_SHIP = 'SS';
     const STS_OUT_SORTING = 'OS';
     const STS_OUT_SORTED = 'OD';
-    const STS_PENDING = 'PG';
 
     const TYPE_BULK = 'BU';
     const TYPE_TRANSFER = 'TF';

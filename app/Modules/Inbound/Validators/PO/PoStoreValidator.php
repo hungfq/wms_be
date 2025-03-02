@@ -40,7 +40,6 @@ class PoStoreValidator extends AbstractValidator
             'to_whs_id' => 'nullable|integer',
             'des' => 'nullable',
             'mot' => 'nullable|string',
-            'internal_id' => 'nullable|integer',
             'bl_no' => 'nullable|string|max:50',
             'voy_no' => 'nullable|string|max:50',
             'vessel' => 'nullable|string|max:50',

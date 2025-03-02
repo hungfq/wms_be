@@ -5,8 +5,10 @@ namespace App\Modules\Outbound\Controllers;
 use App\Http\Controllers\ApiController;
 use App\Libraries\Language;
 use App\Modules\Outbound\Actions\OrderAllocateAction;
+use App\Modules\Outbound\Actions\OrderCancelAction;
 use App\Modules\Outbound\Actions\OrderCreateAction;
 use App\Modules\Outbound\Actions\OrderOutSortAction;
+use App\Modules\Outbound\Actions\OrderRevertAction;
 use App\Modules\Outbound\Actions\OrderScheduleToShipAction;
 use App\Modules\Outbound\Actions\OrderShipAction;
 use App\Modules\Outbound\Actions\OrderShowAction;
@@ -18,8 +20,10 @@ use App\Modules\Outbound\DTO\OrderViewDTO;
 use App\Modules\Outbound\Transformers\OrderShowTransformer;
 use App\Modules\Outbound\Transformers\OrderViewTransformer;
 use App\Modules\Outbound\Validators\OrderAllocateValidator;
+use App\Modules\Outbound\Validators\OrderCancelValidator;
 use App\Modules\Outbound\Validators\OrderCreateValidator;
 use App\Modules\Outbound\Validators\OrderOutSortValidator;
+use App\Modules\Outbound\Validators\OrderRevertValidator;
 use App\Modules\Outbound\Validators\OrderScheduleToShipValidator;
 use App\Modules\Outbound\Validators\OrderShipValidator;
 use App\Modules\Outbound\Validators\OrderUpdateValidator;
@@ -164,5 +168,39 @@ class OrderController extends ApiController
         );
 
         return $this->responseSuccess(Language::translate('Ship Order(s) Successfully.'));
+    }
+
+    public function revert($whsId, OrderRevertValidator $validator, OrderRevertAction $action)
+    {
+        $this->request->merge([
+            'whs_id' => $whsId,
+        ]);
+
+        $validator->validate($this->request->all());
+
+        DB::transaction(function () use ($validator, $action) {
+            $action->handle(
+                $validator->toDTO()
+            );
+        });
+
+        return $this->responseSuccess(Language::translate('Revert Order(s) Successfully.'));
+    }
+
+    public function cancel($whsId, OrderCancelValidator $validator, OrderCancelAction $action)
+    {
+        $this->request->merge([
+            'whs_id' => $whsId,
+        ]);
+
+        $validator->validate($this->request->all());
+
+        DB::transaction(function () use ($validator, $action) {
+            $action->handle(
+                $validator->toDTO()
+            );
+        });
+
+        return $this->responseSuccess(Language::translate('Cancel Order(s) Successfully.'));
     }
 }

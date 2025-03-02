@@ -31,8 +31,11 @@ class EventLog extends BaseSoftModel
     const ORDER_OUT_SORTED = 'ODOD';
     const ORDER_SCHEDULE_TO_SHIP = 'ODSS';
     const ORDER_SHIP = 'ODSH';
+    const ORDER_REVERT = 'ODRV';
+    const ORDER_CANCEL = 'ODCC';
     // wavepick
     const WAVE_PICK_CREATED = 'WVCR';
     const WAVE_PICK_PICKING = 'WVPK';
     const WAVE_PICK_PICKED = 'WVPD';
+    const WAVE_PICK_CANCEL = 'WVCC';
 }

@@ -30,6 +30,13 @@ $api->group([
             'uses' => 'OrderController@ship',
         ]);
 
+        $api->post('/revert', [
+            'uses' => 'OrderController@revert',
+        ]);
+
+        $api->post('/cancel', [
+            'uses' => 'OrderController@cancel',
+        ]);
 
         $api->group(['prefix' => '/{odrHdrId:[0-9]+}'], function ($api) {
             $api->get('/', [
@@ -67,6 +74,10 @@ $api->group([
         $api->group(['prefix' => '/{wvHdrId:[0-9]+}'], function ($api) {
             $api->get('/', [
                 'uses' => 'WavePickController@show',
+            ]);
+
+            $api->post('/cancel', [
+                'uses' => 'WavePickController@cancel',
             ]);
 
             $api->get('/dtl/{wvDtlId:[0-9]+}/suggest-location', [

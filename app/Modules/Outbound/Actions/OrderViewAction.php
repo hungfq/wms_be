@@ -80,6 +80,22 @@ class OrderViewAction
             ->where('odr_hdr.whs_id', $this->dto->whs_id)
             ->where('sts.sts_type', OrderHdr::STATUS_TYPE);
 
+        if ($dto->odr_sts ?? null) {
+            $statuses = array_unique(array_filter(explode(',', $dto->odr_sts)));
+
+            $query->whereIn('odr_hdr.odr_sts', $statuses);
+        }
+
+        if ($dto->odr_num ?? null) {
+            $orderNums = array_unique(array_filter(explode(',', $dto->odr_num)));
+
+            $query->where(function ($q) use ($orderNums) {
+                foreach ($orderNums as $value) {
+                    $q->orWhere('odr_hdr.odr_num', 'LIKE', '%' . trim($value) . '%');
+                }
+            });
+        }
+
         if ($this->dto->sku ?? null) {
             $query->whereHas('orderDtls.item', function ($q) {
                 $q->where('sku', 'LIKE', "%{$this->dto->sku}%");
@@ -126,16 +142,6 @@ class OrderViewAction
             $query->whereDate('odr_hdr.shipped_dt', '<=', $dto->act_shipped_date_to);
         }
 
-        if ($dto->odr_num ?? null) {
-            $orderNums = array_unique(array_filter(explode(',', $dto->odr_num)));
-
-            $query->where(function ($q) use ($orderNums) {
-                foreach ($orderNums as $value) {
-                    $q->orWhere('odr_hdr.odr_num', 'LIKE', '%' . trim($value) . '%');
-                }
-            });
-        }
-
         if ($dto->wv_num ?? null) {
             $wvNums = array_unique(array_filter(explode(',', $dto->wv_num)));
 
@@ -144,12 +150,6 @@ class OrderViewAction
                     $q->orWhere('wv_hdrs.wv_hdr_num', 'LIKE', '%' . trim($value) . '%');
                 }
             });
-        }
-
-        if ($dto->odr_sts ?? null) {
-            $statuses = array_unique(array_filter(explode(',', $dto->odr_sts)));
-
-            $query->whereIn('odr_hdr.odr_sts', $statuses);
         }
 
         Helpers::sortBuilder($query, $this->dto->toArray(), [

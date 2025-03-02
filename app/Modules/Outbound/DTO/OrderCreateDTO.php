@@ -31,7 +31,6 @@ class OrderCreateDTO extends FlexibleDataTransferObject
     public $fax;
     public $phone;
     public $tp_id;
-    public $cancel_by_dt;
     public $in_notes;
     public $cus_notes;
     public $details;
@@ -75,7 +74,6 @@ class OrderCreateDTO extends FlexibleDataTransferObject
             'vat_code' => $request->input('vat_code'),
 
             'ship_by_dt' => $request->input('ship_by_dt'),
-            'cancel_by_dt' => $request->input('cancel_by_dt'),
             'in_notes' => $request->input('in_notes'),
             'cus_notes' => $request->input('cus_notes'),
             'details' => $request->input('details'),

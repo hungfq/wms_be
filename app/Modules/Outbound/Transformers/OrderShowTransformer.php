@@ -33,9 +33,8 @@ class OrderShowTransformer extends TransformerAbstract
             'seal_no' => $model->seal_num,
 
             'cancel_by_dt' => $model->cancel_by_dt,
-            'act_cancel_dt' => $model->act_cancel_dt,
-            'cus_ship_dt' => $model->cus_ship_dt,
             'schedule_dt' => $model->schedule_dt,
+
             'tp_id' => $model->tp_id,
             'code' => $model->code,
             'vat_code' => $model->vat_code,

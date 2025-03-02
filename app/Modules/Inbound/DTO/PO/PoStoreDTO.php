@@ -22,7 +22,6 @@ class PoStoreDTO extends FlexibleDataTransferObject
     public $des;
     public $cus_id;
     public $mot;
-    public $internal_id;
     public $bl_no;
     public $voy_no;
     public $vessel;
@@ -59,7 +58,6 @@ class PoStoreDTO extends FlexibleDataTransferObject
             'des' => $request->input('des'),
             'cus_id' => $request->input('cus_id'),
             'mot' => $request->input('mot'),
-            'internal_id' => $request->input('internal_id'),
             'bl_no' => $request->input('bl_no'),
             'voy_no' => $request->input('voy_no'),
             'vessel' => $request->input('vessel'),

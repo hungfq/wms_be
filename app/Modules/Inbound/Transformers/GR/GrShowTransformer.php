@@ -31,7 +31,6 @@ class GrShowTransformer extends TransformerAbstract
             'gr_hdr_sts_name' => $model->gr_hdr_sts_name,
             'not_putaway_complete' => $model->not_putaway_complete,
             'of_sku' => $model->of_sku,
-            'of_pallet' => $model->of_pallet,
             'act_ctn_ttl' => $model->act_ctn_ttl,
             'act_qty' => $model->act_qty,
             'sum_qty' => (int)$model->act_qty,

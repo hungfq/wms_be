@@ -31,7 +31,6 @@ class PoUpdateValidator extends AbstractValidator
             'des' => 'nullable',
             'cus_id' => 'required|integer',
             'mot' => 'nullable|string',
-            'internal_id' => 'nullable|integer',
             'bl_no' => 'nullable|string|max:50',
             'voy_no' => 'nullable|string|max:50',
             'vessel' => 'nullable|string|max:50',

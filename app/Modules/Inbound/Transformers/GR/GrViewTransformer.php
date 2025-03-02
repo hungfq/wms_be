@@ -15,8 +15,6 @@ class GrViewTransformer extends TransformerAbstract
             'po_hdr_id' => $model->po_hdr_id,
             'po_num' => $model->po_num,
             'ctnr_id' => $model->ctnr_id,
-            'ctnr_name' => data_get($model, 'container.code'),
-            'seal_number' => data_get($model, 'poHdr.seal_number'),
             'gr_hdr_id' => $model->gr_hdr_id,
             'gr_hdr_num' => $model->gr_hdr_num,
             'ref_code' => $model->ref_code,

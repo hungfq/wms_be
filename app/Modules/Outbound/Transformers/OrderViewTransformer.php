@@ -24,7 +24,6 @@ class OrderViewTransformer extends TransformerAbstract
 
         return [
             'odr_id' => $odrHdr->id,
-            'internal_id' => $odrHdr->internal_id,
             'sapo_id' => $odrHdr->sapo_id,
             'odr_num' => $odrHdr->odr_num,
             'wv_id' => $odrHdr->wv_id,
@@ -54,8 +53,6 @@ class OrderViewTransformer extends TransformerAbstract
 
             'cancel_by_dt' => $odrHdr->cancel_by_dt,
             'schedule_dt' => $odrHdr->schedule_dt,
-            'act_cancel_dt' => $odrHdr->act_cancel_dt,
-            'cus_ship_dt' => $odrHdr->cus_ship_dt,
 
             'ship_to_name' => data_get($odrHdr, 'ship_to_name'),
             'ship_to_add' => data_get($odrHdr, 'ship_to_add'),
@@ -121,7 +118,6 @@ class OrderViewTransformer extends TransformerAbstract
             'custbody_scv_tracking_numbers' => 'Tracking Number',
             'truck_num|format_string' => 'Truck No.',
             // 'container_num|format_string' => 'Container No.',
-            'internal_id' => 'ERP ID',
             'sapo_id' => 'SAPO ID',
             'ship_to_code|format_string' => 'Ship To Code',
             'ship_to_name|format_string' => 'Ship To Name',
@@ -160,7 +156,6 @@ class OrderViewTransformer extends TransformerAbstract
             'custbody_scv_source_hrv' => 'E-Commerce Platform',
             'custbody_scv_tracking_numbers' => 'Tracking Number',
             'truck_num|format_string' => 'Truck No.',
-            'internal_id' => 'ERP ID',
             'sapo_id' => 'SAPO ID',
             'ship_to_code|format_string' => 'Ship To Code',
             'ship_to_name|format_string' => 'Ship To Name',

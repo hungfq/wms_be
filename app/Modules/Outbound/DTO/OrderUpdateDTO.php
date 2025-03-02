@@ -33,8 +33,6 @@ class OrderUpdateDTO extends FlexibleDataTransferObject
     public $fax;
     public $phone;
     public $tp_id;
-    public $cancel_by_dt;
-    public $act_cancel_dt;
     public $in_notes;
     public $cus_notes;
     public $transfer_whs_id;
@@ -76,8 +74,6 @@ class OrderUpdateDTO extends FlexibleDataTransferObject
             'phone' => $request->input('phone'),
             'vat_code' => $request->input('vat_code'),
             'tp_id' => $request->input('tp_id'),
-            'cancel_by_dt' => $request->input('cancel_by_dt'),
-            'act_cancel_dt' => $request->input('act_cancel_dt'),
             'in_notes' => $request->input('in_notes'),
             'cus_notes' => $request->input('cus_notes'),
             'transfer_whs_id' => $request->input('transfer_whs_id'),
