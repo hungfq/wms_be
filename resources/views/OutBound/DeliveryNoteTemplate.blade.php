@@ -70,7 +70,7 @@
     <page size="A5">
         <table style="border-collapse: collapse; width: 100%;">
             <tr>
-                <td width="60%">
+                <td width="60%" style="vertical-align: top;">
                     <b>CỬA HÀNG VTNN MINH HOÀNG</b><br/>
                     Ấp Tân Phước, Xã Tân Hiệp B, Huyện Tân Hệp,<br/>
                     Tỉnh Kiên Giang
