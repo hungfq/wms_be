@@ -151,4 +151,22 @@ $api->group([
         ]);
     });
 
+    $api->group(['prefix' => '/warehouses/{whsId:[0-9]+}/replenishment-config'], function ($api) {
+        $api->get('/', [
+            'uses' => 'ReplenishmentConfigController@view',
+        ]);
+        $api->post('/', [
+            'uses' => 'ReplenishmentConfigController@store',
+        ]);
+        $api->get('/{reId:[0-9]+}', [
+            'uses' => 'ReplenishmentConfigController@show',
+        ]);
+        $api->put('/{reId:[0-9]+}', [
+            'uses' => 'ReplenishmentConfigController@update',
+        ]);
+        $api->delete('/{reId:[0-9]+}', [
+            'uses' => 'ReplenishmentConfigController@delete',
+        ]);
+    });
+
 });

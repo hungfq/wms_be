@@ -17,11 +17,6 @@ class ReplenishmentConfig extends BaseSoftModel
         'id',
     ];
 
-    public function location()
-    {
-        return $this->belongsTo(Location::class, 'loc_id');
-    }
-
     public function item()
     {
         return $this->belongsTo(Item::class, 'item_id');
