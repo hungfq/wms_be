@@ -24,7 +24,7 @@ $api->group([
         ]);
 
         $api->get('/replenishment', [
-            'uses' => 'ApiDashboardController@getDashboardTmp',
+            'uses' => 'ApiDashboardController@getStatisticReplenishment',
         ]);
 
     });

@@ -5,6 +5,7 @@ namespace App\Modules\Api\Controllers;
 use App\Entities\Location;
 use App\Entities\OrderHdr;
 use App\Entities\PoHdr;
+use App\Entities\ReplenishmentConfig;
 use App\Entities\WvHdr;
 use App\Http\Controllers\ApiController;
 use Illuminate\Support\Facades\DB;
@@ -146,6 +147,48 @@ class ApiDashboardController extends ApiController
         }
 
         $statistic = $statistic->first()->toArray();
+
+        return ['data' => $statistic];
+    }
+
+    public function getStatisticReplenishment($whsId)
+    {
+        $statistic = ReplenishmentConfig::query()
+            ->with([
+                'item',
+            ])
+            ->select(
+                'replenishment_configs.*',
+                DB::raw("CASE WHEN IFNULL(invt_qty, 0) < replenishment_configs.min_qty THEN 1 ELSE 0 END AS is_warning"),
+            )
+            ->leftJoin(
+                DB::raw("
+                    (SELECT SUM(inventory.avail_qty) AS invt_qty, inventory.item_id, inventory.whs_id FROM inventory
+                    WHERE inventory.deleted = 0
+                    GROUP BY inventory.whs_id, inventory.item_id) invt
+                "),
+                function ($invt) {
+                    $invt->on('invt.item_id', 'replenishment_configs.item_id')
+                        ->on('invt.whs_id', 'replenishment_configs.whs_id');
+                }
+            )
+            ->where('replenishment_configs.whs_id', $whsId)
+            ->havingRaw('is_warning = 1')
+            ->groupBy(['replenishment_configs.id'])
+            ->get();
+
+        $statistic = $statistic->transform(function ($model) {
+            $currentQty = (int)data_get($model, 'current_qty');
+
+            return [
+                'id' => $model->id,
+                'sku' => data_get($model, 'item.sku'),
+                'item_name' => data_get($model, 'item.item_name'),
+                'min_qty' => data_get($model, 'min_qty'),
+                'current_qty' => $currentQty,
+                'needed_qty' => $currentQty - data_get($model, 'min_qty'),
+            ];
+        });
 
         return ['data' => $statistic];
     }
