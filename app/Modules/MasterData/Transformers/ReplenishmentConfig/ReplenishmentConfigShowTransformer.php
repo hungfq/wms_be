@@ -14,6 +14,7 @@ class ReplenishmentConfigShowTransformer extends TransformerAbstract
             'sku' => data_get($model, 'item.sku'),
             'item_name' => data_get($model, 'item.item_name'),
             'min_qty' => data_get($model, 'min_qty'),
+            'des' => data_get($model, 'des'),
         ];
     }
 }
