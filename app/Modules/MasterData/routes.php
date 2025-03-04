@@ -151,6 +151,27 @@ $api->group([
         ]);
     });
 
+    $api->group(['prefix' => '/roles'], function ($api) {
+        $api->get('/', [
+            'uses' => 'RoleController@view',
+        ]);
+    });
+
+    $api->group(['prefix' => '/users'], function ($api) {
+        $api->get('/', [
+            'uses' => 'UserController@view',
+        ]);
+        $api->post('/', [
+            'uses' => 'UserController@store',
+        ]);
+        $api->get('/{userId}', [
+            'uses' => 'UserController@show',
+        ]);
+        $api->put('/{userId}', [
+            'uses' => 'UserController@update',
+        ]);
+    });
+
     $api->group(['prefix' => '/warehouses/{whsId:[0-9]+}/replenishment-config'], function ($api) {
         $api->get('/', [
             'uses' => 'ReplenishmentConfigController@view',

@@ -20,6 +20,7 @@ use App\Entities\Replenishment;
 use App\Entities\ReplenishmentDtl;
 use App\Entities\ReplenishmentSummary;
 use App\Entities\State;
+use App\Entities\User;
 use App\Entities\Vendor;
 use App\Entities\WhsConfig;
 use App\Traits\GetConfigTrait;
@@ -309,6 +310,10 @@ class Config
         Channel::STATUS_KEY => [
             Channel::STATUS_ACTIVE => 'Active',
             Channel::STATUS_INACTIVE => 'Inactive',
+        ],
+        User::STATUS_KEY => [
+            User::STATUS_ACTIVE => 'Active',
+            User::STATUS_INACTIVE => 'Inactive',
         ],
 //        ThirdPartyGroup::STATUS_KEY => [
 //            ThirdPartyGroup::STATUS_ACTIVE => 'Active',

@@ -19,6 +19,7 @@ class User extends BaseSoftModel implements AuthenticatableContract, Authorizabl
 
     use Authenticatable, Authorizable, HasRoles, CreatedByRelationshipTrait, UpdatedByRelationshipTrait;
 
+    const STATUS_KEY = 'USER_STATUS';
     const STATUS_ACTIVE = 'AC';
     const STATUS_INACTIVE = 'IA';
 

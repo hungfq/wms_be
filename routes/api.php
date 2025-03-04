@@ -53,7 +53,6 @@ $api->version('v1', function ($api) {
         });
 
         $modules = [
-            'User',
             'Notification',
             'Documents',
             'MasterData',
