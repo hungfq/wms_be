@@ -23,6 +23,25 @@ class UserViewAction
             ])
             ->join('profiles', 'profiles.user_id', '=', 'users.id');
 
+        if ($this->dto->email) {
+            $query->where('users.email', 'LIKE', "%{$this->dto->email}%");
+        }
+
+        if ($this->dto->user_name) {
+            $query->where('users.name', 'LIKE', "%{$this->dto->user_name}%");
+        }
+
+        if ($this->dto->status) {
+            $query->where('users.name', '=', $this->dto->status);
+        }
+
+        if ($this->dto->first_name) {
+            $query->where('profiles.first_name', 'LIKE', "%{$this->dto->first_name}%");
+        }
+
+        if ($this->dto->last_name) {
+            $query->where('profiles.last_name', 'LIKE', "%{$this->dto->last_name}%");
+        }
 
         Helpers::sortBuilder($query, $dto->toArray(), [
             'abc' => 'profiles.abc',

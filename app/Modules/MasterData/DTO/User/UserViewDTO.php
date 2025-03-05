@@ -6,11 +6,12 @@ use Spatie\DataTransferObject\FlexibleDataTransferObject;
 
 class UserViewDTO extends FlexibleDataTransferObject
 {
-    public $cus_id;
-    public $code;
-    public $name;
+    public $email;
+    public $user_name;
+    public $status;
+    public $first_name;
+    public $last_name;
     public $page;
-    public $phone;
     public $limit;
     public $sort;
     public $export_type;
@@ -20,11 +21,12 @@ class UserViewDTO extends FlexibleDataTransferObject
         $request = $request ?? app('request');
 
         return new self([
-            'cus_id' => $request->input('cus_id'),
-            'code' => $request->input('code'),
-            'name' => $request->input('name'),
+            'email' => $request->input('email'),
+            'user_name' => $request->input('user_name'),
+            'status' => $request->input('status'),
+            'first_name' => $request->input('first_name'),
+            'last_name' => $request->input('last_name'),
             'page' => $request->input('page'),
-            'phone' => $request->input('phone'),
             'limit' => $request->input('limit'),
             'sort' => $request->input('sort'),
             'export_type' => $request->input('export_type'),
