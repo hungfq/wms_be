@@ -8,11 +8,13 @@ use App\Entities\Country;
 use App\Entities\Customer;
 use App\Entities\Department;
 use App\Entities\ItemCategory;
+use App\Entities\LocationType;
 use App\Entities\OdrType;
 use App\Entities\PoType;
 use App\Entities\State;
 use App\Entities\Uom;
 use App\Entities\User;
+use App\Entities\Zone;
 use App\Http\Controllers\ApiController;
 use App\Libraries\Data;
 use App\Modules\MasterData\Transformers\Dropdown\BinLocTransformer;
@@ -112,4 +114,34 @@ class DropdownController extends ApiController
 
         return $this->response->collection($query->get(), $transformer);
     }
+
+    public function zone(BinLocTransformer $transformer)
+    {
+        $query = Zone::query()
+            ->select([
+                'zone_id as id',
+                'zone_code as code',
+                'zone_name as name',
+            ])
+            ->where('zone_sts', Zone::DEFAULT_STS_ACTIVE);
+
+        if ($this->request->input('whs_id')) {
+            $query->where('whs_id', $this->request->input('whs_id'));
+        }
+
+        return $this->response->collection($query->get(), $transformer);
+    }
+
+    public function locType(BinLocTransformer $transformer)
+    {
+        $query = LocationType::query()
+            ->select([
+                'loc_type_id as id',
+                'loc_type_code as code',
+                'loc_type_name as name',
+            ]);
+
+        return $this->response->collection($query->get(), $transformer);
+    }
+
 }

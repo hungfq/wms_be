@@ -62,6 +62,7 @@ $api->version('v1', function ($api) {
             'Barcode',
             'Inventory',
             'Outbound',
+            'WhsConfig',
         ];
 
         foreach ($modules as $module) {

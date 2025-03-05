@@ -101,6 +101,12 @@ $api->group([
         $api->get('/uoms', [
             'uses' => 'DropdownController@uom',
         ]);
+        $api->get('/zone', [
+            'uses' => 'DropdownController@zone',
+        ]);
+        $api->get('/loc-types', [
+            'uses' => 'DropdownController@locType',
+        ]);
     });
 
     $api->group(['prefix' => '/autocomplete'], function ($api) {

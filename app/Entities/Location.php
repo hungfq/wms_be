@@ -13,9 +13,7 @@ class Location extends BaseSoftModel implements StatusRelationshipInterface
     use UpdatedByRelationshipTrait;
     use StatusesRelationshipTrait;
 
-    /** @var string Location status is active */
     const LOCATION_STATUS_ACTIVE = 'AC';
-    /** @var string Location status was locked */
     const LOCATION_STATUS_LOCKED = 'LK';
 
     const STATUS_TYPE = 'LOCATION_STS';
@@ -59,11 +57,6 @@ class Location extends BaseSoftModel implements StatusRelationshipInterface
     public function pallets()
     {
         return $this->hasMany(Pallet::class, 'loc_id');
-    }
-
-    public function poPallets()
-    {
-        return $this->hasMany(PoPallet::class, 'location_id');
     }
 
     public function cartons()
