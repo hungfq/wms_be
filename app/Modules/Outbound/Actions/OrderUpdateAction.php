@@ -86,6 +86,7 @@ class OrderUpdateAction
             'truck_num' => data_get($this->dto, 'truck_num'),
             'seal_num' => data_get($this->dto, 'seal_num'),
 
+            'is_debt' => data_get($this->dto, 'is_debt'),
             'tp_id' => data_get($this->dto, 'tp_id', $tpId),
             'ship_to_name' => data_get($this->dto, 'ship_to_name'),
             'ship_to_add' => data_get($this->dto, 'ship_to_add'),

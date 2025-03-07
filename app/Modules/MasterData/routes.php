@@ -134,11 +134,17 @@ $api->group([
         $api->post('/', [
             'uses' => 'ThirdPartyController@store',
         ]);
-        $api->get('/{tpId}', [
+        $api->get('/{tpId:[0-9]+}', [
             'uses' => 'ThirdPartyController@show',
         ]);
         $api->put('/{tpId}', [
             'uses' => 'ThirdPartyController@update',
+        ]);
+        $api->get('/{tpId:[0-9]+}/wallet', [
+            'uses' => 'ThirdPartyController@viewWallet',
+        ]);
+        $api->put('/{tpId:[0-9]+}/wallet', [
+            'uses' => 'ThirdPartyController@updateWallet',
         ]);
     });
 
@@ -149,10 +155,10 @@ $api->group([
         $api->post('/', [
             'uses' => 'ItemController@store',
         ]);
-        $api->get('/{itemId}', [
+        $api->get('/{itemId:[0-9]+}', [
             'uses' => 'ItemController@show',
         ]);
-        $api->put('/{itemId}', [
+        $api->put('/{itemId:[0-9]+}', [
             'uses' => 'ItemController@update',
         ]);
     });
@@ -164,10 +170,10 @@ $api->group([
         $api->post('/', [
             'uses' => 'UomController@store',
         ]);
-        $api->get('/{id}', [
+        $api->get('/{id:[0-9]+}', [
             'uses' => 'UomController@show',
         ]);
-        $api->put('/{id}', [
+        $api->put('/{id:[0-9]+}', [
             'uses' => 'UomController@update',
         ]);
     });
@@ -185,10 +191,10 @@ $api->group([
         $api->post('/', [
             'uses' => 'UserController@store',
         ]);
-        $api->get('/{userId}', [
+        $api->get('/{userId:[0-9]+}', [
             'uses' => 'UserController@show',
         ]);
-        $api->put('/{userId}', [
+        $api->put('/{userId:[0-9]+}', [
             'uses' => 'UserController@update',
         ]);
     });

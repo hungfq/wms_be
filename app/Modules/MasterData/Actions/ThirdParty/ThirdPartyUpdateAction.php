@@ -11,7 +11,6 @@ class ThirdPartyUpdateAction
 {
     public ThirdPartyUpdateDTO $dto;
     public $thirdParty;
-    public $addresses;
 
     /**
      * @param ThirdPartyUpdateDTO $dto

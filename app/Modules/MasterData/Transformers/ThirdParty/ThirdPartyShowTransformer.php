@@ -14,6 +14,7 @@ class ThirdPartyShowTransformer extends TransformerAbstract
             'cus_name' => data_get($model, 'cus_name'),
             'code' => data_get($model, 'code'),
             'name' => data_get($model, 'name'),
+            'debt_amount' => data_get($model, 'debt_amount'),
             'des' => data_get($model, 'des'),
             'mobile' => data_get($model, 'mobile'),
             'phone' => data_get($model, 'phone'),

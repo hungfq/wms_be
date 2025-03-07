@@ -35,6 +35,7 @@ class OrderShowTransformer extends TransformerAbstract
             'cancel_by_dt' => $model->cancel_by_dt,
             'schedule_dt' => $model->schedule_dt,
 
+            'is_debt' => $model->is_debt,
             'tp_id' => $model->tp_id,
             'code' => $model->code,
             'vat_code' => $model->vat_code,

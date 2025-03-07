@@ -30,6 +30,7 @@ class OrderCreateDTO extends FlexibleDataTransferObject
     public $zip_code;
     public $fax;
     public $phone;
+    public $is_debt;
     public $tp_id;
     public $in_notes;
     public $cus_notes;
@@ -61,6 +62,7 @@ class OrderCreateDTO extends FlexibleDataTransferObject
             'truck_num' => $request->input('truck_no'),
             'seal_num' => $request->input('seal_no'),
 
+            'is_debt' => $request->input('is_debt'),
             'tp_id' => $request->input('tp_id'),
             'ship_to_name' => $request->input('ship_to_name'),
             'ship_to_add' => $request->input('ship_to_add'),

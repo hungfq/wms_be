@@ -15,6 +15,7 @@ class ThirdPartyViewTransformer extends TransformerAbstract
             'code' => data_get($model, 'code'),
             'name' => data_get($model, 'name'),
             'des' => data_get($model, 'des'),
+            'debt_amount' => data_get($model, 'debt_amount'),
             'mobile' => data_get($model, 'mobile'),
             'phone' => data_get($model, 'phone'),
             'email' => data_get($model, 'email'),
@@ -42,14 +43,12 @@ class ThirdPartyViewTransformer extends TransformerAbstract
     public function getTitleExport()
     {
         return [
-            'cus_name' => 'Customer',
             'code' => 'Code',
             'name' => 'Name',
-            'vat_code' => 'VAT Code',
-            'address' => 'Address',
             'phone' => 'Phone',
-            'fax' => 'Fax',
-            'email' => 'Email',
+            'address' => 'Address',
+            'debt_amount' => 'Debt Amount',
+            'vat_code' => 'VAT Code',
             'des' => 'Description',
             'created_date|format_datetime' => 'Created Date',
             'created_by_name' => 'Created By',

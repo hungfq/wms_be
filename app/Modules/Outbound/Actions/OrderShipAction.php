@@ -8,9 +8,12 @@ use App\Entities\Inventory;
 use App\Entities\OdrDrop;
 use App\Entities\OrderDtl;
 use App\Entities\OrderHdr;
+use App\Entities\ThirdParty;
+use App\Entities\ThirdPartyWallet;
 use App\Exceptions\UserException;
 use App\Libraries\Language;
 use App\Modules\Outbound\DTO\OrderShipDTO;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
@@ -118,9 +121,10 @@ class OrderShipAction
         $this->updateInventory($odrHdr->orderDtls->where('odr_dtl_sts', OrderDtl::STS_SHIPPED));
 
         $odrHdr->save();
+        $this->updateThirdPartyDebt($odrHdr);
     }
 
-    public function updateInventory($odrDetails)
+    protected function updateInventory($odrDetails)
     {
         foreach ($odrDetails as $odrDetail) {
             $inventory = Inventory::where([
@@ -140,6 +144,39 @@ class OrderShipAction
                 'ttl' => DB::raw("ttl - {$odrDetail->picked_qty}")
             ]);
         }
+    }
+
+    protected function updateThirdPartyDebt($odrHdr)
+    {
+        $amount = (int)data_get($odrHdr, 'amount');
+        if ($amount <= 0) {
+            return $this;
+        }
+
+        if (!data_get($odrHdr, 'is_debt')) {
+            return $this;
+        }
+
+        if (!data_get($odrHdr, 'tp_id')) {
+            return $this;
+        }
+
+        $thirdParty = ThirdParty::query()->find(data_get($odrHdr, 'tp_id'));
+        if (!$thirdParty) {
+            return $this;
+        }
+
+        $thirdParty->debt_amount += $amount;
+        $thirdParty->save();
+        $thirdParty->wallets()->create([
+            'date' => Carbon::now('Asia/Ho_Chi_Minh')->format('Y-m-d H:i:s'),
+            'type' => ThirdPartyWallet::TYPE_ORDER,
+            'ref_odr_id' => data_get($odrHdr, 'id'),
+            'description' => data_get($odrHdr, 'odr_num'),
+            'amount' => $amount,
+            'current_debt_amount' => $thirdParty->debt_amount,
+        ]);
+
     }
 
     protected function createEventTracking()

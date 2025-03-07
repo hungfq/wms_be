@@ -20,6 +20,7 @@ use App\Entities\Replenishment;
 use App\Entities\ReplenishmentDtl;
 use App\Entities\ReplenishmentSummary;
 use App\Entities\State;
+use App\Entities\ThirdPartyWallet;
 use App\Entities\User;
 use App\Entities\Vendor;
 use App\Entities\WhsConfig;
@@ -344,6 +345,11 @@ class Config
             ReplenishmentSummary::STATUS_REPLENISHING => 'Replenishing',
             ReplenishmentSummary::STATUS_REPLENISHED => 'Replenished',
             ReplenishmentSummary::STATUS_CANCELED => 'Cancelled',
+        ],
+        ThirdPartyWallet::TYPE_KEY => [
+            ThirdPartyWallet::TYPE_ORDER => 'Order',
+            ThirdPartyWallet::TYPE_INCREASE_DEBT => 'Increase debt',
+            ThirdPartyWallet::TYPE_DECREASE_DEBT => 'Reducing Debt',
         ],
         WhsConfig::CONFIG_KEY => [
             //Common

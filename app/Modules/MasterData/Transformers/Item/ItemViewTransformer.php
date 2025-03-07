@@ -34,7 +34,6 @@ class ItemViewTransformer extends TransformerAbstract
         return [
             'sku|format_string' => "Model",
             'item_name|format_string' => 'Model Name',
-            'item_name_en|format_string' => "Model Name(EN)",
             'uom_name|format_string' => 'UOM',
             'subsidiary_name|format_string' => 'Subsidiary',
             'item_class_name|format_string' => 'Class',

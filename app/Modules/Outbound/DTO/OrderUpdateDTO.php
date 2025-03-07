@@ -32,6 +32,7 @@ class OrderUpdateDTO extends FlexibleDataTransferObject
     public $zip_code;
     public $fax;
     public $phone;
+    public $is_debt;
     public $tp_id;
     public $in_notes;
     public $cus_notes;
@@ -74,6 +75,7 @@ class OrderUpdateDTO extends FlexibleDataTransferObject
             'phone' => $request->input('phone'),
             'vat_code' => $request->input('vat_code'),
             'tp_id' => $request->input('tp_id'),
+            'is_debt' => $request->input('is_debt'),
             'in_notes' => $request->input('in_notes'),
             'cus_notes' => $request->input('cus_notes'),
             'transfer_whs_id' => $request->input('transfer_whs_id'),

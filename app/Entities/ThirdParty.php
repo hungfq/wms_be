@@ -31,4 +31,9 @@ class ThirdParty extends BaseSoftModel
     {
         return $this->belongsTo(User::class, 'updated_by');
     }
+
+    public function wallets()
+    {
+        return $this->hasMany(ThirdPartyWallet::class, 'tp_id');
+    }
 }
