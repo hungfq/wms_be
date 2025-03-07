@@ -157,6 +157,21 @@ $api->group([
         ]);
     });
 
+    $api->group(['prefix' => '/uom'], function ($api) {
+        $api->get('/', [
+            'uses' => 'UomController@view',
+        ]);
+        $api->post('/', [
+            'uses' => 'UomController@store',
+        ]);
+        $api->get('/{id}', [
+            'uses' => 'UomController@show',
+        ]);
+        $api->put('/{id}', [
+            'uses' => 'UomController@update',
+        ]);
+    });
+
     $api->group(['prefix' => '/roles'], function ($api) {
         $api->get('/', [
             'uses' => 'RoleController@view',
