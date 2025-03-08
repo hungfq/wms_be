@@ -9,10 +9,13 @@ use App\Modules\MasterData\Actions\ThirdParty\ThirdPartyStoreAction;
 use App\Modules\MasterData\Actions\ThirdParty\ThirdPartyUpdateAction;
 use App\Modules\MasterData\Actions\ThirdParty\ThirdPartyUpdateWalletAction;
 use App\Modules\MasterData\Actions\ThirdParty\ThirdPartyViewAction;
+use App\Modules\MasterData\Actions\ThirdParty\ThirdPartyViewOrderAction;
 use App\Modules\MasterData\Actions\ThirdParty\ThirdPartyViewWalletAction;
 use App\Modules\MasterData\DTO\ThirdParty\ThirdPartyViewDTO;
+use App\Modules\MasterData\DTO\ThirdParty\ThirdPartyViewOrderDTO;
 use App\Modules\MasterData\DTO\ThirdParty\ThirdPartyViewWalletDTO;
 use App\Modules\MasterData\Transformers\ThirdParty\ThirdPartyShowTransformer;
+use App\Modules\MasterData\Transformers\ThirdParty\ThirdPartyViewOrderTransformer;
 use App\Modules\MasterData\Transformers\ThirdParty\ThirdPartyViewTransformer;
 use App\Modules\MasterData\Transformers\ThirdParty\ThirdPartyViewWalletTransformer;
 use App\Modules\MasterData\Validators\ThirdParty\ThirdPartyStoreValidator;
@@ -100,5 +103,18 @@ class ThirdPartyController extends ApiController
         });
 
         return $this->responseSuccess(Language::translate('Update Third Party Successfully!'));
+    }
+
+    public function viewOrder($tpId, ThirdPartyViewOrderAction $action, ThirdPartyViewOrderTransformer $transformer)
+    {
+        $this->request->merge([
+            'tp_id' => $tpId,
+        ]);
+
+        $data = $action->handle(
+            ThirdPartyViewOrderDTO::fromRequest()
+        );
+
+        return $this->response->paginator($data, $transformer);
     }
 }

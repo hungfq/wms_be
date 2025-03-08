@@ -60,8 +60,6 @@ class OrderHdr extends BaseSoftModel implements StatusRelationshipInterface
         'data_split' => 'json'
     ];
 
-    public $columnDefaultCalcM3 = 'odr_dtl.ctn_ttl';
-
     public function orderDtls()
     {
         return $this->hasMany(OrderDtl::class, 'odr_id');

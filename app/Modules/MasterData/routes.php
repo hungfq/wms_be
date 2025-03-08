@@ -146,6 +146,9 @@ $api->group([
         $api->put('/{tpId:[0-9]+}/wallet', [
             'uses' => 'ThirdPartyController@updateWallet',
         ]);
+        $api->get('/{tpId:[0-9]+}/orders', [
+            'uses' => 'ThirdPartyController@viewOrder',
+        ]);
     });
 
     $api->group(['prefix' => '/items'], function ($api) {

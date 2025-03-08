@@ -347,7 +347,7 @@ class Config
             ReplenishmentSummary::STATUS_CANCELED => 'Cancelled',
         ],
         ThirdPartyWallet::TYPE_KEY => [
-            ThirdPartyWallet::TYPE_ORDER => 'Order',
+            ThirdPartyWallet::TYPE_ORDER => 'Buy Order',
             ThirdPartyWallet::TYPE_INCREASE_DEBT => 'Increase debt',
             ThirdPartyWallet::TYPE_DECREASE_DEBT => 'Reducing Debt',
         ],
