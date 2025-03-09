@@ -84,7 +84,7 @@ class DropdownController extends ApiController
             $query->where('country_id', $this->request->input('country_id'));
         }
 
-        return $this->response->collection($query->get(), $transformer);
+        return $this->response->collection($query->orderBy('priority')->get(), $transformer);
     }
 
     public function orderTypes(BinLocTransformer $transformer)
